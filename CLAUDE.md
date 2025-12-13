@@ -105,12 +105,25 @@ const applicants = await db.applicants.findMany({
 - Next.js 15 (App Router)
 - React 19
 - TypeScript
+- Tailwind CSS
+- shadcn/ui（UIコンポーネント）
 - Bun（パッケージマネージャー）
 - Vitest（テスト）
-- Storybook（UIカタログ、一部）
+- Storybook（UIレビュー用）
 - Clerk（認証）
 - Supabase（PostgreSQL + Storage）
 - Google Gemini API（AI解析）
+
+### UI開発フロー
+
+フロントエンド実装は以下のフローで進める:
+
+1. コンポーネント/画面を作成
+2. Storybook で確認可能な状態にする
+3. ユーザーにレビュー依頼
+4. OK が出たら次のタスクへ
+
+**Storybook でのレビューを経てから次に進むこと。**
 
 ---
 

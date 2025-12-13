@@ -10,7 +10,9 @@
 │    - Next.js 15 (App Router)                            │
 │    - React 19                                           │
 │    - TypeScript                                         │
-│    - Storybook（一部コンポーネント）                      │
+│    - Tailwind CSS                                       │
+│    - shadcn/ui（UIコンポーネント）                        │
+│    - Storybook（UIレビュー用）                           │
 │                                                         │
 │  バックエンド                                            │
 │    - Next.js API Routes（TypeScript統一）               │
@@ -46,6 +48,30 @@
 - 最新のApp Router でモダンな設計
 - React 19 の新機能（Server Components等）を活用
 - Vercelデプロイが簡単
+
+### UIコンポーネント: shadcn/ui + Tailwind CSS
+
+- shadcn/ui: コピー&ペースト方式のUIコンポーネント
+  - 依存関係が少なく、カスタマイズしやすい
+  - Radix UI ベースでアクセシビリティ対応
+  - 必要なコンポーネントのみ追加
+- Tailwind CSS: ユーティリティファーストCSS
+  - 高速な開発
+  - デザインシステムの一貫性
+
+### UI開発フロー
+
+```
+1. コンポーネント作成
+    ↓
+2. Storybook で確認
+    ↓
+3. ユーザーレビュー・フィードバック
+    ↓
+4. OK が出たら次へ進む
+```
+
+**重要:** フロントエンドは Storybook でのレビューを経てから実装を進める。
 
 ### 認証: Clerk
 
