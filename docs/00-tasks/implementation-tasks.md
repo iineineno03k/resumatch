@@ -243,53 +243,54 @@ UIライブラリは **shadcn/ui** を使用。
 
 ---
 
-### 6.1 shadcn/ui セットアップ
-- [ ] shadcn/ui 初期化（`bunx shadcn@latest init`）
-- [ ] 基本コンポーネント追加（Button, Input, Card, Badge, etc.）
-- [ ] カラーテーマ設定（必要なら）
+### 6.1 shadcn/ui セットアップ（完了）
+- [x] shadcn/ui 初期化（`bunx shadcn@latest init`）
+- [x] 基本コンポーネント追加（Button, Input, Card, Badge, etc.）
+- [x] カラーテーマ設定（必要なら）
 
-### 6.2 Storybook 設定（※導入は Phase 1.2 で完了済み前提）
-- [ ] shadcn/ui コンポーネントの Story 作成
-- [ ] Storybook の設定調整（Tailwind 対応等）
-- [ ] **レビュー:** `bun run storybook` で起動し、基本コンポーネントが確認できる状態
+### 6.2 Storybook 設定（完了）
+- [x] shadcn/ui コンポーネントの Story 作成
+- [x] Storybook の設定調整（Tailwind 対応等）
+- [x] **レビュー:** `bun run storybook` で起動し、基本コンポーネントが確認できる状態
 
 ---
 
-### 6.3 共通UIコンポーネント
+### 6.3 共通UIコンポーネント（完了）
 
 **6.3.1 レイアウト系**
-- [ ] AppShell（サイドバー + メインコンテンツ）
-- [ ] Header（ロゴ、ナビ、ユーザーメニュー）
-- [ ] Sidebar（ナビゲーション）
-- [ ] **レビュー:** Storybook で確認
+- [x] AppShell（サイドバー + メインコンテンツ）
+- [x] Header（ロゴ、ナビ、ユーザーメニュー）
+- [x] Sidebar（ナビゲーション）
+- [x] **レビュー:** Storybook で確認
 
 **6.3.2 データ表示系**
-- [ ] StatusBadge（応募ステータス表示）
-- [ ] SkillTag（スキルタグ）
-- [ ] StarRating（星評価 1-5）
-- [ ] EmptyState（データなし時の表示）
-- [ ] **レビュー:** Storybook で確認
+- [x] StatusBadge（応募ステータス表示）
+- [x] SkillTag（スキルタグ）
+- [x] StarRating（星評価 1-5）
+- [x] EmptyState（データなし時の表示）
+- [x] **レビュー:** Storybook で確認
 
 **6.3.3 フォーム系**
-- [ ] FileUpload（PDFアップロード、ドラッグ&ドロップ対応）
-- [ ] SearchInput（検索入力）
-- [ ] FilterSelect（フィルター選択）
-- [ ] **レビュー:** Storybook で確認
+- [x] FileUpload（PDFアップロード、ドラッグ&ドロップ対応）
+- [x] SearchInput（検索入力）
+- [x] FilterSelect（フィルター選択）
+- [x] **レビュー:** Storybook で確認
 
 **6.3.4 フィードバック系**
-- [ ] LoadingSpinner / Skeleton
-- [ ] ErrorMessage
-- [ ] SuccessToast
-- [ ] **レビュー:** Storybook で確認
+- [x] LoadingSpinner / Skeleton
+- [x] ErrorMessage
+- [x] SuccessToast
+- [x] **レビュー:** Storybook で確認
 
 ---
 
 ### 6.4 オンボーディング画面
 
-**6.4.1 チーム作成画面**
-- [ ] `/onboarding` - チーム名入力フォーム
-- [ ] バリデーション、エラー表示
-- [ ] **レビュー:** Storybook で確認
+**6.4.1 チーム作成画面（完了）**
+- [x] `/onboarding` - チーム名入力フォーム
+- [x] バリデーション、エラー表示
+- [x] UI改善（カラーパレット、カード固定幅、ヘッダー修正）
+- [x] **レビュー:** Storybook で確認
 
 **6.4.2 フロー実装**
 - [ ] チーム未所属時のリダイレクト処理
