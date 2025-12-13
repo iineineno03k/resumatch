@@ -1,6 +1,11 @@
-import type { WebhookEvent } from "@clerk/nextjs/server";
+import type { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
+
+type EmailAddress = {
+  id: string;
+  email_address: string;
+};
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -36,7 +41,7 @@ export async function POST(req: Request) {
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
-  } catch (err) {
+  } catch (_err) {
     console.error("Webhook signature verification failed");
     return new Response("Invalid signature", { status: 400 });
   }
@@ -61,16 +66,14 @@ export async function POST(req: Request) {
   return new Response("Webhook received", { status: 200 });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function handleUserCreated(data: any) {
+async function handleUserCreated(data: UserJSON) {
   const { id, email_addresses, first_name, last_name, image_url } = data;
 
-  const primaryEmail = email_addresses?.find(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (email: any) => email.id === data.primary_email_address_id,
+  const primaryEmail = (email_addresses as EmailAddress[] | undefined)?.find(
+    (email) => email.id === data.primary_email_address_id,
   )?.email_address;
 
-  // TODO: Phase 3 で Supabase に INSERT
+  // TODO: Phase 4 で Supabase に INSERT
   // await db.users.create({
   //   clerk_id: id,
   //   email: primaryEmail,
@@ -78,19 +81,19 @@ async function handleUserCreated(data: any) {
   //   avatar_url: image_url || null,
   // });
 
-  console.log(`User created: id=${id}`);
+  console.log(
+    `User created: id=${id}, email=${primaryEmail}, name=${first_name} ${last_name}, avatar=${image_url}`,
+  );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function handleUserUpdated(data: any) {
+async function handleUserUpdated(data: UserJSON) {
   const { id, email_addresses, first_name, last_name, image_url } = data;
 
-  const primaryEmail = email_addresses?.find(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (email: any) => email.id === data.primary_email_address_id,
+  const primaryEmail = (email_addresses as EmailAddress[] | undefined)?.find(
+    (email) => email.id === data.primary_email_address_id,
   )?.email_address;
 
-  // TODO: Phase 3 で Supabase を UPDATE
+  // TODO: Phase 4 で Supabase を UPDATE
   // await db.users.update({
   //   where: { clerk_id: id },
   //   data: {
@@ -100,14 +103,15 @@ async function handleUserUpdated(data: any) {
   //   },
   // });
 
-  console.log(`User updated: id=${id}`);
+  console.log(
+    `User updated: id=${id}, email=${primaryEmail}, name=${first_name} ${last_name}, avatar=${image_url}`,
+  );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function handleUserDeleted(data: any) {
+async function handleUserDeleted(data: { id?: string }) {
   const { id } = data;
 
-  // TODO: Phase 3 で Supabase から DELETE（または soft delete）
+  // TODO: Phase 4 で Supabase から DELETE（または soft delete）
   // await db.users.delete({
   //   where: { clerk_id: id },
   // });
