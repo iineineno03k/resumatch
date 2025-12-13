@@ -19,10 +19,20 @@
 - `docs/04-api/` - API設計
 - `docs/05-ai-module/` - AI処理仕様
 - `docs/06-ui/` - 画面設計
+- `docs/06-ui/frontend-standards.md` - **フロントエンド実装標準（実装時は必ず参照）**
 
 ---
 
 ## 絶対に守るべきルール
+
+### 0. フロントエンド実装標準の遵守
+
+**フロントエンド（React/Next.js）のコードを書く際は、必ず `docs/06-ui/frontend-standards.md` を参照してください。**
+
+特に重要なルール:
+- **useEffect は外部システムとの同期専用** - 内部状態管理には使用禁止
+- **派生値の計算に useEffect + setState を使わない** - 直接計算または useMemo を使用
+- **Client Components は最小限に** - デフォルトは Server Components
 
 ### 1. 個人情報の取り扱い
 

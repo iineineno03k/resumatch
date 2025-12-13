@@ -15,6 +15,7 @@
 | API | [openapi.yaml](./04-api/openapi.yaml) | OpenAPI仕様書（未作成） |
 | AI | [pdf-extraction.md](./05-ai-module/pdf-extraction.md) | PDF解析の実装方針（未作成） |
 | UI | [screens.md](./06-ui/screens.md) | 画面一覧・ワイヤーフレーム |
+| UI | [frontend-standards.md](./06-ui/frontend-standards.md) | **フロントエンド実装標準（必読）** |
 
 ## プロジェクト概要
 
