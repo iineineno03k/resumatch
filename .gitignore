@@ -67,3 +67,5 @@ storybook-static/
 !.claude/commands/
 
 *storybook.log
+
+/src/generated/prisma
