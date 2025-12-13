@@ -63,6 +63,7 @@ storybook-static/
 
 # Local config (MCP, Claude, etc.)
 .mcp.json
-.claude/
+.claude/*
+!.claude/commands/
 
 *storybook.log
