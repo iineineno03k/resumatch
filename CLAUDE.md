@@ -6,15 +6,17 @@
 
 ## 次にやること
 
-**実装タスクは `docs/00-tasks/implementation-tasks.md` を参照してください。**
+**実装を始める前に、必ず `docs/00-tasks/implementation-tasks.md` を読んでください。**
 
-現在の進捗とやるべきことが記載されています。
+具体的なコマンドやオプション、注意事項が書いてあります。
+CLAUDE.md だけを見て実装を始めないでください。
 
 ### 現在の状態
 
 - 設計ドキュメント: 完了
-- コード: **まだ書かれていない**（Next.js プロジェクト未作成）
-- 次のタスク: **Phase 1 - プロジェクト初期化**（`bunx create-next-app`）
+- コード: **まだ書かれていない**
+- 次のタスク: **Phase 1 - プロジェクト初期化**
+  - 詳細は `docs/00-tasks/implementation-tasks.md` の Phase 1 を参照
 
 ---
 
