@@ -10,6 +10,12 @@
 
 現在の進捗とやるべきことが記載されています。
 
+### 現在の状態
+
+- 設計ドキュメント: 完了
+- コード: **まだ書かれていない**（Next.js プロジェクト未作成）
+- 次のタスク: **Phase 1 - プロジェクト初期化**（`bunx create-next-app`）
+
 ---
 
 ## プロジェクト概要
@@ -23,6 +29,7 @@
 設計ドキュメントは `docs/` 配下を参照：
 
 - `docs/README.md` - ドキュメント目次
+- `docs/00-tasks/implementation-tasks.md` - **実装タスク一覧（進捗管理）**
 - `docs/01-requirements/` - 要件定義
 - `docs/02-architecture/` - 技術設計
 - `docs/03-database/` - DB設計
