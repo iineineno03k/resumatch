@@ -19,8 +19,8 @@
 | 0 | 準備（Git、ドキュメント整備） | 完了 |
 | 1 | プロジェクト初期化 | 完了 |
 | 2 | 認証（Clerk） | 完了 |
-| 3 | DB（Supabase） | **次はここから** |
-| 4 | 基本API実装 | 未着手 |
+| 3 | DB（Supabase） | 完了 |
+| 4 | 基本API実装 | **次はここから** |
 | 5 | AI/PDF処理 | 未着手 |
 | 6 | フロントエンド実装 | 未着手 |
 | 7 | テスト・品質 | 未着手 |
@@ -127,32 +127,32 @@ src/
 
 ---
 
-## Phase 3: DB（Supabase）
+## Phase 3: DB（Supabase）（完了）
 
 ### 3.1 Supabase セットアップ
-- [ ] Supabase プロジェクト作成
-- [ ] 環境変数設定（SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY）
-- [ ] `@supabase/supabase-js` インストール
-- [ ] Supabase クライアント作成（`lib/db/client.ts`）
+- [x] Supabase プロジェクト作成
+- [x] 環境変数設定（SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY）
+- [x] `@supabase/supabase-js` インストール
+- [x] Supabase クライアント作成（`lib/db/client.ts`）
 
 ### 3.2 テーブル作成
-- [ ] SQL実行（`docs/03-database/tables.md` の全テーブル作成スクリプト）
-- [ ] teams
-- [ ] users
-- [ ] team_members
-- [ ] team_invitations
-- [ ] jobs
-- [ ] applicants
-- [ ] resumes
-- [ ] notes
+- [x] SQL実行（`docs/03-database/tables.md` の全テーブル作成スクリプト）
+- [x] teams
+- [x] users
+- [x] team_members
+- [x] team_invitations
+- [x] jobs
+- [x] applicants
+- [x] resumes
+- [x] notes
 
 ### 3.3 Storage セットアップ
-- [ ] `resumes` バケット作成（履歴書PDF用）
-- [ ] アクセスポリシー設定（認証済みユーザーのみ）
+- [x] `resumes` バケット作成（履歴書PDF用）
+- [x] アクセスポリシー設定（認証済みユーザーのみ）
 
 ### 3.4 型生成
-- [ ] Supabase CLI で型生成
-- [ ] `types/database.ts` に配置
+- [x] Supabase CLI で型生成
+- [x] `types/database.ts` に配置
 
 **参照:** `docs/03-database/tables.md`, `docs/03-database/er-diagram.md`
 
