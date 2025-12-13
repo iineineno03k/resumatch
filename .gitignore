@@ -69,3 +69,6 @@ storybook-static/
 *storybook.log
 
 /src/generated/prisma
+
+# Tesseract language data
+*.traineddata
