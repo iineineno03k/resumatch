@@ -6,17 +6,19 @@
 
 ## 次にやること
 
-**実装を始める前に、必ず `docs/00-tasks/implementation-tasks.md` を読んでください。**
+**`/task` コマンドを実行して現在のタスクを確認してください。**
 
-具体的なコマンドやオプション、注意事項が書いてあります。
-CLAUDE.md だけを見て実装を始めないでください。
+または `docs/00-tasks/implementation-tasks.md` を読んでください。
 
-### 現在の状態
+### タスク管理コマンド
 
-- 設計ドキュメント: 完了
-- コード: **まだ書かれていない**
-- 次のタスク: **Phase 1 - プロジェクト初期化**
-  - 詳細は `docs/00-tasks/implementation-tasks.md` の Phase 1 を参照
+| コマンド | 説明 |
+|---------|------|
+| `/task` | 現在のタスク状況を確認 |
+| `/task-done` | 現在の Phase を完了にして次へ進む |
+| `/task-update` | 個別タスクを完了にする |
+
+**Phase 完了時は必ず `/task-done` を実行してください。**
 
 ---
 
@@ -121,10 +123,10 @@ const applicants = await db.applicants.findMany({
 
 ## 技術スタック
 
-- Next.js 15 (App Router)
+- Next.js 16 (App Router)
 - React 19
 - TypeScript
-- Tailwind CSS
+- Tailwind CSS 4
 - shadcn/ui（UIコンポーネント）
 - Bun（パッケージマネージャー）
 - Biome（Linter + Formatter）
