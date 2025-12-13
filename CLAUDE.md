@@ -125,6 +125,7 @@ const applicants = await db.applicants.findMany({
 - Tailwind CSS
 - shadcn/ui（UIコンポーネント）
 - Bun（パッケージマネージャー）
+- Biome（Linter + Formatter）
 - Vitest（テスト）
 - Storybook（UIレビュー用）
 - Clerk（認証）

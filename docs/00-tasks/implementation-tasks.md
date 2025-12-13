@@ -51,7 +51,9 @@
   ```
   ※ `.` で現在のディレクトリに作成（サブディレクトリを作らない）
   ※ Turbopack は使用しない（`--no-turbopack` または対話で No）
+  ※ 既存ファイル（README.md等）の上書き確認が出たら許可する
 - [ ] 不要なボイラープレート削除（デフォルトのページ内容等）
+- [ ] README.md を元の内容に戻す（create-next-app が上書きした場合）
 
 ### 1.2 開発環境セットアップ
 - [ ] Bun でパッケージ管理（npm ではなく bun を使う）
@@ -59,7 +61,12 @@
   - `bun install` で依存関係インストール
 - [ ] Vitest 導入: `bun add -D vitest @vitejs/plugin-react`
 - [ ] Storybook 導入: `bunx storybook@latest init`
-- [ ] Prettier 導入: `bun add -D prettier eslint-config-prettier`
+- [ ] Biome 導入（Linter + Formatter）:
+  ```bash
+  bun add -D @biomejs/biome
+  bunx @biomejs/biome init
+  ```
+  ※ ESLint は create-next-app で入るが、Biome に置き換える
 - [ ] `.env.local` 雛形作成（環境変数のテンプレート）
 
 ### 1.3 ディレクトリ構成

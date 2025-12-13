@@ -34,6 +34,7 @@
 │                                                         │
 │  開発ツール                                              │
 │    - Bun（パッケージマネージャー）                        │
+│    - Biome（Linter + Formatter）                        │
 │                                                         │
 │  インフラ                                                │
 │    - Vercel (Free)                                      │
@@ -109,6 +110,13 @@
 
 - npm/yarnより高速
 - TypeScriptをネイティブ実行可能
+
+### Linter / Formatter: Biome
+
+- ESLint + Prettier の代替
+- 高速（Rust製）
+- 設定がシンプル
+- 1ツールで Linter と Formatter を兼ねる
 
 ## インフラ構成
 
