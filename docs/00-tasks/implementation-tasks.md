@@ -44,6 +44,16 @@
 
 ## Phase 1: プロジェクト初期化
 
+### 前提条件
+- [ ] Bun がインストールされていること
+  ```bash
+  # 確認
+  bun --version
+
+  # インストールされていない場合
+  curl -fsSL https://bun.sh/install | bash
+  ```
+
 ### 1.1 Next.js プロジェクト作成
 - [ ] 現在のディレクトリで Next.js プロジェクト作成:
   ```bash
