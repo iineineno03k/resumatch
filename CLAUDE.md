@@ -183,16 +183,43 @@ const user = await requireAuth();
 
 ```
 src/
-├── app/                 # Next.js App Router
+├── app/                 # Next.js App Router（ルーティングのみ、薄く）
 │   ├── (auth)/          # 認証済みページ
-│   ├── api/             # API Routes
+│   ├── api/webhooks/    # Webhook のみ（REST API は使用しない）
 │   └── ...
-├── components/          # UIコンポーネント
-├── lib/                 # ユーティリティ
-│   ├── db/              # DB操作
-│   ├── ai/              # AI処理（PDF解析、Gemini連携）
-│   └── ...
-└── types/               # 型定義
+├── features/            # フィーチャーベースのドメインロジック
+│   ├── teams/
+│   │   ├── actions.ts   # Server Actions
+│   │   ├── queries.ts   # データ取得関数
+│   │   ├── types.ts     # 型定義
+│   │   └── index.ts     # エクスポート
+│   ├── jobs/
+│   ├── applicants/
+│   └── invitations/
+├── components/          # 共通UIコンポーネント
+├── lib/                 # 共通ユーティリティ
+│   ├── auth/            # 認証（Clerk / モック）
+│   ├── db/              # Prisma クライアント
+│   └── ai/              # AI処理（PDF解析、Gemini連携）
+└── types/               # グローバル型定義
+```
+
+### データ操作パターン
+
+**REST API は使用しない。Server Actions + Queries パターンを使用。**
+
+```typescript
+// ❌ 従来: API Route を fetch
+const res = await fetch("/api/teams");
+const teams = await res.json();
+
+// ✅ Server Component から直接クエリ
+import { getTeamsByUserId } from "@/features/teams";
+const teams = await getTeamsByUserId(user.id);
+
+// ✅ データ変更は Server Actions
+import { createTeam } from "@/features/teams";
+const result = await createTeam({ name: "新しいチーム" });
 ```
 
 ### 命名規則
