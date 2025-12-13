@@ -16,6 +16,7 @@
 | AI | [pdf-extraction.md](./05-ai-module/pdf-extraction.md) | PDF解析の実装方針（未作成） |
 | UI | [screens.md](./06-ui/screens.md) | 画面一覧・ワイヤーフレーム |
 | UI | [frontend-standards.md](./06-ui/frontend-standards.md) | **フロントエンド実装標準（必読）** |
+| UI | [nextjs-basic-principle/](./06-ui/nextjs-basic-principle/) | Next.js App Router 設計入門（実装の正） |
 
 ## プロジェクト概要
 

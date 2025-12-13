@@ -20,6 +20,7 @@
 - `docs/05-ai-module/` - AI処理仕様
 - `docs/06-ui/` - 画面設計
 - `docs/06-ui/frontend-standards.md` - **フロントエンド実装標準（実装時は必ず参照）**
+- `docs/06-ui/nextjs-basic-principle/` - **Next.js App Router 設計入門（実装の正）**
 
 ---
 
@@ -27,12 +28,18 @@
 
 ### 0. フロントエンド実装標準の遵守
 
-**フロントエンド（React/Next.js）のコードを書く際は、必ず `docs/06-ui/frontend-standards.md` を参照してください。**
+**フロントエンド（React/Next.js）のコードを書く際は、必ず以下を参照してください:**
 
-特に重要なルール:
-- **useEffect は外部システムとの同期専用** - 内部状態管理には使用禁止
-- **派生値の計算に useEffect + setState を使わない** - 直接計算または useMemo を使用
-- **Client Components は最小限に** - デフォルトは Server Components
+1. `docs/06-ui/frontend-standards.md` - 実装標準とインデックス
+2. `docs/06-ui/nextjs-basic-principle/` - 詳細な設計指針（実装の正）
+
+実装シーンに応じて、frontend-standards.md のインデックスから該当する章を参照すること。
+
+**特に重要なルール:**
+- **データフェッチは Server Components で行う** - Client でのフェッチは原則禁止
+- **useEffect は外部システムとの同期専用** - 派生値計算や内部状態管理には使用禁止
+- **Client Components は必要最小限に** - `"use client"` の影響範囲を理解する
+- **データ操作は Server Actions で行う** - revalidate との連携を活用
 
 ### 1. 個人情報の取り扱い
 
