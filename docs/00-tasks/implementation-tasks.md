@@ -18,8 +18,8 @@
 |-------|------|------|
 | 0 | 準備（Git、ドキュメント整備） | 完了 |
 | 1 | プロジェクト初期化 | 完了 |
-| 2 | 認証（Clerk） | **次はここから** |
-| 3 | DB（Supabase） | 未着手 |
+| 2 | 認証（Clerk） | 完了 |
+| 3 | DB（Supabase） | **次はここから** |
 | 4 | 基本API実装 | 未着手 |
 | 5 | AI/PDF処理 | 未着手 |
 | 6 | フロントエンド実装 | 未着手 |
@@ -98,25 +98,30 @@ src/
 
 ---
 
-## Phase 2: 認証（Clerk）
+## Phase 2: 認証（Clerk）（完了）
 
 ### 2.1 Clerk セットアップ
-- [ ] Clerk アカウント作成、アプリケーション作成
-- [ ] `@clerk/nextjs` インストール
-- [ ] 環境変数設定（CLERK_SECRET_KEY, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY）
-- [ ] ClerkProvider でアプリをラップ
-- [ ] ミドルウェア設定（認証必須ルートの保護）
+- [x] Clerk アカウント作成、アプリケーション作成
+- [x] `@clerk/nextjs` インストール
+- [x] 環境変数設定（CLERK_SECRET_KEY, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY）
+- [x] ClerkProvider でアプリをラップ
+- [x] ミドルウェア設定（`src/proxy.ts`）
 
 ### 2.2 認証画面
-- [ ] `/sign-in` - Clerk の SignIn コンポーネント配置
-- [ ] `/sign-up` - Clerk の SignUp コンポーネント配置
-- [ ] リダイレクト設定（ログイン後の遷移先）
+- [x] `/sign-in` - Clerk の SignIn コンポーネント配置
+- [x] `/sign-up` - Clerk の SignUp コンポーネント配置
+- [x] リダイレクト設定（ログイン後の遷移先: `/dashboard`）
 
 ### 2.3 Clerk Webhook
-- [ ] Webhook エンドポイント作成（`/api/webhooks/clerk`）
-- [ ] 署名検証実装
-- [ ] user.created → users テーブルに INSERT
-- [ ] user.updated → users テーブルを UPDATE
+- [x] Webhook エンドポイント作成（`/api/webhooks/clerk`）
+- [x] 署名検証実装（svix）
+- [ ] **後で設定**: Clerk Dashboard での Webhook URL 登録・Signing Secret 取得
+- [ ] **後で設定**: user.created → users テーブルに INSERT（Phase 3 完了後）
+- [ ] **後で設定**: user.updated → users テーブルを UPDATE（Phase 3 完了後）
+
+**注意:**
+- Webhook の Clerk Dashboard 設定・実際の DB 連携は Phase 3（Supabase）完了後に実施
+- 開発中は認証モックを使用（後続タスクで実装）
 
 **参照:** `docs/04-api/endpoints.md`
 
