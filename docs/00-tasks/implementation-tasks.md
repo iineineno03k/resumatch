@@ -17,8 +17,8 @@
 | Phase | 内容 | 状態 |
 |-------|------|------|
 | 0 | 準備（Git、ドキュメント整備） | 完了 |
-| 1 | プロジェクト初期化 | **次はここから** |
-| 2 | 認証（Clerk） | 未着手 |
+| 1 | プロジェクト初期化 | 完了 |
+| 2 | 認証（Clerk） | **次はここから** |
 | 3 | DB（Supabase） | 未着手 |
 | 4 | 基本API実装 | 未着手 |
 | 5 | AI/PDF処理 | 未着手 |
@@ -42,10 +42,10 @@
 
 ---
 
-## Phase 1: プロジェクト初期化
+## Phase 1: プロジェクト初期化（完了）
 
 ### 前提条件
-- [ ] Bun がインストールされていること
+- [x] Bun がインストールされていること
   ```bash
   # 確認
   bun --version
@@ -55,7 +55,7 @@
   ```
 
 ### 1.1 Next.js プロジェクト作成
-- [ ] 現在のディレクトリで Next.js プロジェクト作成:
+- [x] 現在のディレクトリで Next.js プロジェクト作成:
   ```bash
   bunx create-next-app@latest . --biome --app --src-dir --use-bun --import-alias "@/*"
   ```
@@ -64,16 +64,16 @@
   ※ `--use-bun` で Bun をパッケージマネージャーに指定
   ※ `--typescript` と `--tailwind` はデフォルトで有効
   ※ 既存ファイル（README.md, .gitignore 等）の上書き確認が出たら許可する
-- [ ] 作成後の確認:
-  - [ ] `.gitignore` に既存の設定（.env.local, .mcp.json, .claude/ 等）が残っているか確認、なければ追加
-  - [ ] `README.md` を元の内容（CLAUDE.md への誘導）に戻す
-  - [ ] `biome.json` が作成されていることを確認
-- [ ] 不要なボイラープレート削除（src/app/page.tsx のデフォルト内容等）
+- [x] 作成後の確認:
+  - [x] `.gitignore` に既存の設定（.env.local, .mcp.json, .claude/ 等）が残っているか確認、なければ追加
+  - [x] `README.md` を元の内容（CLAUDE.md への誘導）に戻す
+  - [x] `biome.json` が作成されていることを確認
+- [x] 不要なボイラープレート削除（src/app/page.tsx のデフォルト内容等）
 
 ### 1.2 開発環境セットアップ
-- [ ] Vitest 導入: `bun add -D vitest @vitejs/plugin-react`
-- [ ] Storybook 導入: `bunx storybook@latest init`
-- [ ] `.env.local` 雛形作成（環境変数のテンプレート）
+- [x] Vitest 導入: `bun add -D vitest @vitejs/plugin-react`
+- [x] Storybook 導入: `bunx storybook@latest init`
+- [x] `.env.local` 雛形作成（環境変数のテンプレート）
 
 ### 1.3 ディレクトリ構成
 ```
