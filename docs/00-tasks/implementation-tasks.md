@@ -158,45 +158,45 @@ src/
 
 ---
 
-## Phase 4: 基本API実装（完了）
+## Phase 4: ドメインロジック実装（完了）
+
+**注意: REST API ではなく Server Actions + Queries パターンで実装済み**
 
 ### 4.1 共通処理
-- [x] 認証モック（開発時Clerk不要）
-- [x] 認証ミドルウェア（Clerk セッション検証 / モック切替）
-- [x] チーム所属チェック関数
-- [x] エラーハンドリング共通化
-- [x] レスポンス形式の統一
+- [x] 認証モック（`USE_AUTH_MOCK=true` で Clerk 不要）
+- [x] 認証ヘルパー（`getCurrentUser()`, `requireAuth()`）
 
-### 4.2 チーム API
-- [x] `GET /api/teams` - 所属チーム一覧
-- [x] `POST /api/teams` - チーム作成
+### 4.2 features/teams
+- [x] `getTeamsByUserId()` - 所属チーム一覧取得
+- [x] `getTeamWithMembership()` - チーム詳細取得
+- [x] `createTeam()` - チーム作成（Server Action）
 
-### 4.3 招待 API
-- [x] `POST /api/teams/:teamId/invitations` - 招待リンク発行
-- [x] `GET /api/invitations/:token` - 招待検証（認証不要）
-- [x] `POST /api/invitations/:token/accept` - 招待受け入れ
+### 4.3 features/invitations
+- [x] `validateInvitationToken()` - 招待検証
+- [x] `createInvitation()` - 招待リンク発行（Server Action）
+- [x] `acceptInvitation()` - 招待受け入れ（Server Action）
 
-### 4.4 求人 API
-- [x] `GET /api/teams/:teamId/jobs` - 求人一覧
-- [x] `POST /api/teams/:teamId/jobs` - 求人作成
-- [x] `GET /api/teams/:teamId/jobs/:jobId` - 求人詳細
-- [x] `PATCH /api/teams/:teamId/jobs/:jobId` - 求人更新
+### 4.4 features/jobs
+- [x] `getJobsByTeamId()` - 求人一覧取得
+- [x] `getJobById()` - 求人詳細取得
+- [x] `createJob()` - 求人作成（Server Action）
+- [x] `updateJob()` - 求人更新（Server Action）
 
-### 4.5 応募者 API
-- [x] `GET /api/teams/:teamId/applicants` - 応募者一覧（フィルタ、ページネーション）
-- [x] `POST /api/teams/:teamId/applicants` - 応募者登録
-- [x] `GET /api/teams/:teamId/applicants/:applicantId` - 応募者詳細
-- [x] `PATCH /api/teams/:teamId/applicants/:applicantId` - 応募者更新
+### 4.5 features/applicants
+- [x] `getApplicantsByTeamId()` - 応募者一覧取得（フィルタ、ページネーション）
+- [x] `getApplicantById()` - 応募者詳細取得
+- [x] `getNotesByApplicantId()` - メモ一覧取得
+- [x] `createApplicant()` - 応募者登録（Server Action）
+- [x] `updateApplicant()` - 応募者更新（Server Action）
+- [x] `createNote()` - メモ追加（Server Action）
 
-### 4.6 メモ API
-- [x] `GET /api/teams/:teamId/applicants/:applicantId/notes` - メモ一覧
-- [x] `POST /api/teams/:teamId/applicants/:applicantId/notes` - メモ追加
-
-**参照:** `docs/04-api/endpoints.md`
+**参照:** `src/features/` 配下の各モジュール
 
 ---
 
 ## Phase 5: AI/PDF処理
+
+**注意: REST API ではなく Server Actions パターンで実装**
 
 ### 5.1 PDF テキスト抽出モジュール
 - [ ] `pdfjs-dist` インストール
@@ -216,10 +216,12 @@ src/
 - [ ] 解析関数作成（`lib/ai/analyze-resume.ts`）
 - [ ] **単体テスト作成**
 
-### 5.4 履歴書 API
-- [ ] `POST /api/teams/:teamId/applicants/:applicantId/resume` - アップロード
-- [ ] `GET /api/teams/:teamId/applicants/:applicantId/resume` - 取得
-- [ ] `POST /api/teams/:teamId/applicants/:applicantId/resume/analyze` - AI解析実行
+### 5.4 features/resumes（Server Actions）
+- [ ] `types.ts` - 型定義（Resume, AnalysisResult 等）
+- [ ] `queries.ts` - `getResumeByApplicantId()` - 履歴書取得
+- [ ] `actions.ts` - `uploadResume()` - アップロード（Server Action）
+- [ ] `actions.ts` - `analyzeResume()` - AI解析実行（Server Action）
+- [ ] `index.ts` - エクスポート
 
 ### 5.5 統合テスト
 - [ ] PDF → テキスト抽出 → AI解析 の一連フローテスト
@@ -517,5 +519,7 @@ UIライブラリは **shadcn/ui** を使用。
 
 1. **必ず `CLAUDE.md` を読む** - 個人情報の取り扱いルールが書いてある
 2. **設計ドキュメントを参照** - `docs/` 配下に全ての設計がある
-3. **AI/PDF処理は単体テストを先に書く** - 統合前にモジュール単位で精度担保
-4. **DBスキーマは変わる前提** - カラム追加・型変更はあり得る
+3. **REST API は使用しない** - Server Actions + Queries パターン（`src/features/` 配下）
+4. **AI/PDF処理は単体テストを先に書く** - 統合前にモジュール単位で精度担保
+5. **DBスキーマは変わる前提** - カラム追加・型変更はあり得る
+6. **認証モック** - `USE_AUTH_MOCK=true` で Clerk 不要で開発可能
