@@ -20,8 +20,8 @@
 | 1 | プロジェクト初期化 | 完了 |
 | 2 | 認証（Clerk） | 完了 |
 | 3 | DB（Supabase） | 完了 |
-| 4 | 基本API実装 | **次はここから** |
-| 5 | AI/PDF処理 | 未着手 |
+| 4 | 基本API実装 | 完了 |
+| 5 | AI/PDF処理 | **次はここから** |
 | 6 | フロントエンド実装 | 未着手 |
 | 7 | テスト・品質 | 未着手 |
 | 8 | デプロイ | 未着手 |
@@ -158,38 +158,39 @@ src/
 
 ---
 
-## Phase 4: 基本API実装
+## Phase 4: 基本API実装（完了）
 
 ### 4.1 共通処理
-- [ ] 認証ミドルウェア（Clerk セッション検証）
-- [ ] チーム所属チェック関数
-- [ ] エラーハンドリング共通化
-- [ ] レスポンス形式の統一
+- [x] 認証モック（開発時Clerk不要）
+- [x] 認証ミドルウェア（Clerk セッション検証 / モック切替）
+- [x] チーム所属チェック関数
+- [x] エラーハンドリング共通化
+- [x] レスポンス形式の統一
 
 ### 4.2 チーム API
-- [ ] `GET /api/teams` - 所属チーム一覧
-- [ ] `POST /api/teams` - チーム作成
+- [x] `GET /api/teams` - 所属チーム一覧
+- [x] `POST /api/teams` - チーム作成
 
 ### 4.3 招待 API
-- [ ] `POST /api/teams/:teamId/invitations` - 招待リンク発行
-- [ ] `GET /api/invitations/:token` - 招待検証（認証不要）
-- [ ] `POST /api/invitations/:token/accept` - 招待受け入れ
+- [x] `POST /api/teams/:teamId/invitations` - 招待リンク発行
+- [x] `GET /api/invitations/:token` - 招待検証（認証不要）
+- [x] `POST /api/invitations/:token/accept` - 招待受け入れ
 
 ### 4.4 求人 API
-- [ ] `GET /api/teams/:teamId/jobs` - 求人一覧
-- [ ] `POST /api/teams/:teamId/jobs` - 求人作成
-- [ ] `GET /api/teams/:teamId/jobs/:jobId` - 求人詳細
-- [ ] `PATCH /api/teams/:teamId/jobs/:jobId` - 求人更新
+- [x] `GET /api/teams/:teamId/jobs` - 求人一覧
+- [x] `POST /api/teams/:teamId/jobs` - 求人作成
+- [x] `GET /api/teams/:teamId/jobs/:jobId` - 求人詳細
+- [x] `PATCH /api/teams/:teamId/jobs/:jobId` - 求人更新
 
 ### 4.5 応募者 API
-- [ ] `GET /api/teams/:teamId/applicants` - 応募者一覧（フィルタ、ページネーション）
-- [ ] `POST /api/teams/:teamId/applicants` - 応募者登録
-- [ ] `GET /api/teams/:teamId/applicants/:applicantId` - 応募者詳細
-- [ ] `PATCH /api/teams/:teamId/applicants/:applicantId` - 応募者更新
+- [x] `GET /api/teams/:teamId/applicants` - 応募者一覧（フィルタ、ページネーション）
+- [x] `POST /api/teams/:teamId/applicants` - 応募者登録
+- [x] `GET /api/teams/:teamId/applicants/:applicantId` - 応募者詳細
+- [x] `PATCH /api/teams/:teamId/applicants/:applicantId` - 応募者更新
 
 ### 4.6 メモ API
-- [ ] `GET /api/teams/:teamId/applicants/:applicantId/notes` - メモ一覧
-- [ ] `POST /api/teams/:teamId/applicants/:applicantId/notes` - メモ追加
+- [x] `GET /api/teams/:teamId/applicants/:applicantId/notes` - メモ一覧
+- [x] `POST /api/teams/:teamId/applicants/:applicantId/notes` - メモ追加
 
 **参照:** `docs/04-api/endpoints.md`
 
