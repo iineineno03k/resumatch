@@ -147,6 +147,34 @@ const applicants = await db.applicants.findMany({
 
 **Storybook でのレビューを経てから次に進むこと。**
 
+### 開発時の認証モック
+
+開発時に Clerk を使わずに動作確認するには、環境変数を設定:
+
+```bash
+# .env.local に追加
+USE_AUTH_MOCK=true
+MOCK_USER_KEY=default  # default, owner, member から選択
+```
+
+**モックユーザー:**
+| キー | メール | 説明 |
+|------|--------|------|
+| default | dev@example.com | デフォルト |
+| owner | owner@example.com | チームオーナー |
+| member | member@example.com | チームメンバー |
+
+**API での認証取得:**
+```typescript
+import { getCurrentUser, requireAuth } from "@/lib/auth";
+
+// 認証済みユーザー取得（null 許容）
+const user = await getCurrentUser();
+
+// 認証必須（未認証時は例外）
+const user = await requireAuth();
+```
+
 ---
 
 ## コーディング規約
