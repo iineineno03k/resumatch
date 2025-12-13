@@ -45,16 +45,22 @@
 ## Phase 1: プロジェクト初期化
 
 ### 1.1 Next.js プロジェクト作成
-- [ ] `bunx create-next-app` で Next.js 15 プロジェクト作成
-- [ ] TypeScript, ESLint, App Router 有効化
-- [ ] 不要なボイラープレート削除
+- [ ] 現在のディレクトリで Next.js プロジェクト作成:
+  ```bash
+  bunx create-next-app@latest . --typescript --eslint --tailwind --app --src-dir --import-alias "@/*"
+  ```
+  ※ `.` で現在のディレクトリに作成（サブディレクトリを作らない）
+  ※ Turbopack は使用しない（`--no-turbopack` または対話で No）
+- [ ] 不要なボイラープレート削除（デフォルトのページ内容等）
 
 ### 1.2 開発環境セットアップ
-- [ ] Bun でパッケージ管理
-- [ ] Vitest 導入（テスト）
-- [ ] Storybook 導入（UIカタログ）
-- [ ] Prettier / ESLint 設定
-- [ ] `.env.local` 雛形作成
+- [ ] Bun でパッケージ管理（npm ではなく bun を使う）
+  - `package-lock.json` があれば削除
+  - `bun install` で依存関係インストール
+- [ ] Vitest 導入: `bun add -D vitest @vitejs/plugin-react`
+- [ ] Storybook 導入: `bunx storybook@latest init`
+- [ ] Prettier 導入: `bun add -D prettier eslint-config-prettier`
+- [ ] `.env.local` 雛形作成（環境変数のテンプレート）
 
 ### 1.3 ディレクトリ構成
 ```
@@ -225,10 +231,10 @@ UIライブラリは **shadcn/ui** を使用。
 - [ ] 基本コンポーネント追加（Button, Input, Card, Badge, etc.）
 - [ ] カラーテーマ設定（必要なら）
 
-### 6.2 Storybook セットアップ
-- [ ] Storybook 導入・設定
+### 6.2 Storybook 設定（※導入は Phase 1.2 で完了済み前提）
 - [ ] shadcn/ui コンポーネントの Story 作成
-- [ ] **レビュー:** Storybook が起動し、基本コンポーネントが確認できる状態
+- [ ] Storybook の設定調整（Tailwind 対応等）
+- [ ] **レビュー:** `bun run storybook` で起動し、基本コンポーネントが確認できる状態
 
 ---
 
