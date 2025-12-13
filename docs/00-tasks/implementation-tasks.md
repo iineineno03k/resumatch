@@ -47,26 +47,19 @@
 ### 1.1 Next.js プロジェクト作成
 - [ ] 現在のディレクトリで Next.js プロジェクト作成:
   ```bash
-  bunx create-next-app@latest . --typescript --eslint --tailwind --app --src-dir --import-alias "@/*"
+  bunx create-next-app@latest . --biome --app --src-dir --use-bun --import-alias "@/*"
   ```
   ※ `.` で現在のディレクトリに作成（サブディレクトリを作らない）
-  ※ Turbopack は使用しない（`--no-turbopack` または対話で No）
+  ※ `--biome` で最初から Biome を使用（ESLint ではない）
+  ※ `--use-bun` で Bun をパッケージマネージャーに指定
+  ※ `--typescript` と `--tailwind` はデフォルトで有効
   ※ 既存ファイル（README.md等）の上書き確認が出たら許可する
 - [ ] 不要なボイラープレート削除（デフォルトのページ内容等）
 - [ ] README.md を元の内容に戻す（create-next-app が上書きした場合）
 
 ### 1.2 開発環境セットアップ
-- [ ] Bun でパッケージ管理（npm ではなく bun を使う）
-  - `package-lock.json` があれば削除
-  - `bun install` で依存関係インストール
 - [ ] Vitest 導入: `bun add -D vitest @vitejs/plugin-react`
 - [ ] Storybook 導入: `bunx storybook@latest init`
-- [ ] Biome 導入（Linter + Formatter）:
-  ```bash
-  bun add -D @biomejs/biome
-  bunx @biomejs/biome init
-  ```
-  ※ ESLint は create-next-app で入るが、Biome に置き換える
 - [ ] `.env.local` 雛形作成（環境変数のテンプレート）
 
 ### 1.3 ディレクトリ構成
