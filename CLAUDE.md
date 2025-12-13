@@ -209,6 +209,7 @@ bun run typecheck   # TypeScript 型チェック
 **必須ルール:**
 - 日本語で書く
 - プレフィックスをつける
+- `Co-Authored-By` や `Generated with Claude` などの署名は**絶対に入れない**
 
 **プレフィックス一覧:**
 | プレフィックス | 用途 |
