@@ -53,9 +53,12 @@
   ※ `--biome` で最初から Biome を使用（ESLint ではない）
   ※ `--use-bun` で Bun をパッケージマネージャーに指定
   ※ `--typescript` と `--tailwind` はデフォルトで有効
-  ※ 既存ファイル（README.md等）の上書き確認が出たら許可する
-- [ ] 不要なボイラープレート削除（デフォルトのページ内容等）
-- [ ] README.md を元の内容に戻す（create-next-app が上書きした場合）
+  ※ 既存ファイル（README.md, .gitignore 等）の上書き確認が出たら許可する
+- [ ] 作成後の確認:
+  - [ ] `.gitignore` に既存の設定（.env.local, .mcp.json, .claude/ 等）が残っているか確認、なければ追加
+  - [ ] `README.md` を元の内容（CLAUDE.md への誘導）に戻す
+  - [ ] `biome.json` が作成されていることを確認
+- [ ] 不要なボイラープレート削除（src/app/page.tsx のデフォルト内容等）
 
 ### 1.2 開発環境セットアップ
 - [ ] Vitest 導入: `bun add -D vitest @vitejs/plugin-react`
