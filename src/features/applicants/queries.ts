@@ -22,6 +22,9 @@ export async function getApplicantsByCompanyId(
     company_id: companyId,
     ...(options?.jobId && { job_id: options.jobId }),
     ...(options?.status && { status: options.status }),
+    ...(options?.search && {
+      name: { contains: options.search, mode: "insensitive" as const },
+    }),
   };
 
   const [applicants, total] = await Promise.all([

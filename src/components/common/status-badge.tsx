@@ -1,27 +1,35 @@
 import { Badge } from "@/components/ui/badge";
+import type { ApplicantStatus } from "@/features/applicants/types";
 import { cn } from "@/lib/utils";
-
-export type ApplicantStatus =
-  | "new"
-  | "screening"
-  | "interview"
-  | "offered"
-  | "rejected"
-  | "hired";
 
 const statusConfig: Record<
   ApplicantStatus,
   {
     label: string;
     variant: "default" | "secondary" | "destructive" | "outline";
+    className?: string;
   }
 > = {
-  new: { label: "新規", variant: "secondary" },
   screening: { label: "書類選考", variant: "outline" },
-  interview: { label: "面接", variant: "default" },
-  offered: { label: "内定", variant: "default" },
+  first_interview: { label: "一次面接", variant: "default" },
+  second_interview: { label: "二次面接", variant: "default" },
+  final_interview: {
+    label: "最終面接",
+    variant: "default",
+    className: "bg-purple-600 hover:bg-purple-600/90",
+  },
+  offer: {
+    label: "内定",
+    variant: "default",
+    className: "bg-blue-600 hover:bg-blue-600/90",
+  },
+  accepted: {
+    label: "入社承諾",
+    variant: "default",
+    className: "bg-green-600 hover:bg-green-600/90",
+  },
   rejected: { label: "不採用", variant: "destructive" },
-  hired: { label: "採用", variant: "default" },
+  withdrawn: { label: "辞退", variant: "secondary" },
 };
 
 interface StatusBadgeProps {
@@ -33,15 +41,10 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   const config = statusConfig[status];
 
   return (
-    <Badge
-      variant={config.variant}
-      className={cn(
-        status === "hired" && "bg-green-600 hover:bg-green-600/90",
-        status === "offered" && "bg-blue-600 hover:bg-blue-600/90",
-        className,
-      )}
-    >
+    <Badge variant={config.variant} className={cn(config.className, className)}>
       {config.label}
     </Badge>
   );
 }
+
+export type { ApplicantStatus };

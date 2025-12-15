@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { type ApplicantStatus, StatusBadge } from "./status-badge";
+import type { ApplicantStatus } from "@/features/applicants/types";
+import { StatusBadge } from "./status-badge";
 
 const meta: Meta<typeof StatusBadge> = {
   title: "Common/StatusBadge",
@@ -12,12 +13,14 @@ const meta: Meta<typeof StatusBadge> = {
     status: {
       control: "select",
       options: [
-        "new",
         "screening",
-        "interview",
-        "offered",
+        "first_interview",
+        "second_interview",
+        "final_interview",
+        "offer",
+        "accepted",
         "rejected",
-        "hired",
+        "withdrawn",
       ] satisfies ApplicantStatus[],
     },
   },
@@ -26,27 +29,39 @@ const meta: Meta<typeof StatusBadge> = {
 export default meta;
 type Story = StoryObj<typeof StatusBadge>;
 
-export const New: Story = {
-  args: {
-    status: "new",
-  },
-};
-
 export const Screening: Story = {
   args: {
     status: "screening",
   },
 };
 
-export const Interview: Story = {
+export const FirstInterview: Story = {
   args: {
-    status: "interview",
+    status: "first_interview",
   },
 };
 
-export const Offered: Story = {
+export const SecondInterview: Story = {
   args: {
-    status: "offered",
+    status: "second_interview",
+  },
+};
+
+export const FinalInterview: Story = {
+  args: {
+    status: "final_interview",
+  },
+};
+
+export const Offer: Story = {
+  args: {
+    status: "offer",
+  },
+};
+
+export const Accepted: Story = {
+  args: {
+    status: "accepted",
   },
 };
 
@@ -56,21 +71,23 @@ export const Rejected: Story = {
   },
 };
 
-export const Hired: Story = {
+export const Withdrawn: Story = {
   args: {
-    status: "hired",
+    status: "withdrawn",
   },
 };
 
 export const AllStatuses: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <StatusBadge status="new" />
       <StatusBadge status="screening" />
-      <StatusBadge status="interview" />
-      <StatusBadge status="offered" />
+      <StatusBadge status="first_interview" />
+      <StatusBadge status="second_interview" />
+      <StatusBadge status="final_interview" />
+      <StatusBadge status="offer" />
+      <StatusBadge status="accepted" />
       <StatusBadge status="rejected" />
-      <StatusBadge status="hired" />
+      <StatusBadge status="withdrawn" />
     </div>
   ),
 };

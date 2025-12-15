@@ -112,6 +112,7 @@ export type PaginationOptions = {
 export type ApplicantFilterOptions = {
   jobId?: string;
   status?: ApplicantStatus;
+  search?: string;
 } & PaginationOptions;
 
 /**
