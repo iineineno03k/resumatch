@@ -57,7 +57,9 @@ export default async function JobDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header user={{ name: user.name, email: user.email, avatarUrl: user.avatarUrl }} />
+      <Header
+        user={{ name: user.name, email: user.email, avatarUrl: user.avatarUrl }}
+      />
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Button variant="ghost" size="sm" asChild>

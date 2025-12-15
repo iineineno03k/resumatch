@@ -4,10 +4,10 @@ import { ClerkProvider, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useMemo,
-  type ReactNode,
 } from "react";
 
 type AuthContextValue = {
@@ -76,7 +76,10 @@ type AuthProviderProps = {
   mockMode?: boolean;
 };
 
-export function AuthProvider({ children, mockMode = false }: AuthProviderProps) {
+export function AuthProvider({
+  children,
+  mockMode = false,
+}: AuthProviderProps) {
   if (mockMode) {
     return <MockAuthProvider>{children}</MockAuthProvider>;
   }

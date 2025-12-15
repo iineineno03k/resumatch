@@ -1,5 +1,4 @@
 import { SignIn } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 import { MockSignIn } from "./mock-sign-in";
 
 // サーバーサイドでモックモードを判定

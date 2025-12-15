@@ -16,7 +16,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header user={{ name: user.name, email: user.email, avatarUrl: user.avatarUrl }} />
+      <Header
+        user={{ name: user.name, email: user.email, avatarUrl: user.avatarUrl }}
+      />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-foreground">ダッシュボード</h1>

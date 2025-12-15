@@ -60,12 +60,12 @@ export function JobCard({
       >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                 <Briefcase className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <CardTitle className="text-base">{title}</CardTitle>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <CardTitle className="truncate text-base">{title}</CardTitle>
                 <CardDescription className="text-xs">
                   {formatDate(createdAt)} 作成
                 </CardDescription>

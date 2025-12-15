@@ -3,7 +3,6 @@
 import { Briefcase, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -12,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth/provider";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "求人", href: "/jobs", icon: Briefcase },
@@ -79,7 +79,9 @@ export function Header({ user }: HeaderProps) {
                 className="flex items-center space-x-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 <Avatar className="h-8 w-8">
-                  {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt={user.name || ""} />}
+                  {user.avatarUrl && (
+                    <AvatarImage src={user.avatarUrl} alt={user.name || ""} />
+                  )}
                   <AvatarFallback className="bg-primary text-primary-foreground text-sm">
                     {initials}
                   </AvatarFallback>
