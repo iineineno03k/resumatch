@@ -136,16 +136,63 @@ const applicants = await db.applicants.findMany({
 - Supabase（PostgreSQL + Storage）
 - Google Gemini API（AI解析）
 
-### UI開発フロー
+### UI開発フロー（自律的に進める）
 
-フロントエンド実装は以下のフローで進める:
+フロントエンド実装は以下のフローで**自律的に**進める:
 
+```
 1. コンポーネント/画面を作成
-2. Storybook で確認可能な状態にする
-3. ユーザーにレビュー依頼
-4. OK が出たら次のタスクへ
+2. 自動検証を実行（下記参照）
+3. 問題があれば自分で修正
+4. コミット & タスク更新
+5. 次のタスクへ進む
+```
 
-**Storybook でのレビューを経てから次に進むこと。**
+**ユーザー確認が必要なのは「デザインの最終確認」のみ。**
+機能的な動作確認は自律的に行う。
+
+### 自動検証チェックリスト（実装後に必ず実行）
+
+以下を**すべて**実行してからコミットする:
+
+```bash
+# 1. 型チェック
+bun run typecheck
+
+# 2. Linter + Formatter
+bun run check:fix
+
+# 3. ビルド確認（SSRエラー検出）
+bun run build
+```
+
+### Playwright による動作確認
+
+ページ実装後は Playwright MCP ツールで実際にブラウザ確認する:
+
+```
+1. 開発サーバー起動: bun run dev
+2. mcp__playwright__browser_navigate でページを開く
+3. mcp__playwright__browser_snapshot でDOM構造を確認
+4. mcp__playwright__browser_console_messages でエラー確認
+5. 必要に応じてスクリーンショット撮影
+```
+
+**確認ポイント:**
+- ページが正常に表示されるか
+- コンソールエラーがないか
+- リンク・ボタンが正しく動作するか
+- フォーム送信が機能するか（Server Actions）
+- 空状態（EmptyState）が正しく表示されるか
+
+### エラー発生時の対応
+
+1. エラー内容を分析
+2. 原因を特定して修正
+3. 再度検証を実行
+4. 解決したらコミット
+
+**自分で解決できない場合のみユーザーに相談する。**
 
 ### 開発時の認証モック
 
