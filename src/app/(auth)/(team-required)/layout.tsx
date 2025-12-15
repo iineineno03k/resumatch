@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import { getTeamsByUserId } from "@/features/teams";
+import { getUserCompany } from "@/features/companies";
 import { getCurrentUser } from "@/lib/auth";
 
-export default async function TeamRequiredLayout({
+export default async function CompanyRequiredLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -14,10 +14,10 @@ export default async function TeamRequiredLayout({
     redirect("/sign-in");
   }
 
-  // チーム所属チェック
-  const teams = await getTeamsByUserId(user.id);
+  // 会社所属チェック
+  const company = await getUserCompany(user.id);
 
-  if (teams.length === 0) {
+  if (!company) {
     redirect("/onboarding");
   }
 

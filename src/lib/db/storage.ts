@@ -25,19 +25,19 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 
 /**
  * 履歴書ファイルをStorageにアップロード
- * @param teamId チームID
+ * @param companyId 会社ID
  * @param applicantId 応募者ID
  * @param file ファイルデータ
  * @param fileName ファイル名
  * @returns アップロード結果
  */
 export async function uploadResumeFile(
-  teamId: string,
+  companyId: string,
   applicantId: string,
   file: Buffer | Uint8Array,
   fileName: string,
 ): Promise<{ success: true; url: string } | { success: false; error: string }> {
-  const filePath = `${teamId}/${applicantId}/${Date.now()}_${fileName}`;
+  const filePath = `${companyId}/${applicantId}/${Date.now()}_${fileName}`;
 
   const { error } = await supabaseAdmin.storage
     .from("resumes")

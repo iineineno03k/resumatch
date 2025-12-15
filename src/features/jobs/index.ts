@@ -4,7 +4,7 @@
 export { createJob, updateJob } from "./actions";
 
 // Queries
-export { getJobById, getJobsByTeamId } from "./queries";
+export { getJobById, getJobsByCompanyId } from "./queries";
 export type {
   ActionResult,
   CreateJobInput,

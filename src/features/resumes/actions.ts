@@ -19,18 +19,14 @@ import type {
 } from "./types";
 
 /**
- * メンバーシップチェック
+ * 会社メンバーシップチェック
  */
-async function checkMembership(teamId: string, userId: string) {
-  const membership = await prisma.team_members.findUnique({
-    where: {
-      team_id_user_id: {
-        team_id: teamId,
-        user_id: userId,
-      },
-    },
+async function checkCompanyMembership(companyId: string, userId: string) {
+  const user = await prisma.users.findUnique({
+    where: { id: userId },
+    select: { company_id: true },
   });
-  return membership !== null;
+  return user?.company_id === companyId;
 }
 
 /**
@@ -44,17 +40,17 @@ export async function uploadResume(
     return { success: false, error: "認証が必要です" };
   }
 
-  const { teamId, applicantId, file } = input;
+  const { companyId, applicantId, file } = input;
 
   // メンバーシップチェック
-  const isMember = await checkMembership(teamId, user.id);
+  const isMember = await checkCompanyMembership(companyId, user.id);
   if (!isMember) {
-    return { success: false, error: "このチームへのアクセス権限がありません" };
+    return { success: false, error: "この会社へのアクセス権限がありません" };
   }
 
   // 応募者存在チェック
   const applicant = await prisma.applicants.findFirst({
-    where: { id: applicantId, team_id: teamId },
+    where: { id: applicantId, company_id: companyId },
   });
 
   if (!applicant) {
@@ -89,7 +85,7 @@ export async function uploadResume(
 
   // Storageにアップロード
   const uploadResult = await uploadResumeFile(
-    teamId,
+    companyId,
     applicantId,
     buffer,
     file.name,
@@ -112,7 +108,7 @@ export async function uploadResume(
     },
   });
 
-  revalidatePath(`/teams/${teamId}/applicants/${applicantId}`);
+  revalidatePath(`/applicants/${applicantId}`);
 
   return {
     success: true,
@@ -134,12 +130,12 @@ export async function analyzeResume(
     return { success: false, error: "認証が必要です" };
   }
 
-  const { teamId, applicantId, resumeId } = input;
+  const { companyId, applicantId, resumeId } = input;
 
   // メンバーシップチェック
-  const isMember = await checkMembership(teamId, user.id);
+  const isMember = await checkCompanyMembership(companyId, user.id);
   if (!isMember) {
-    return { success: false, error: "このチームへのアクセス権限がありません" };
+    return { success: false, error: "この会社へのアクセス権限がありません" };
   }
 
   // 履歴書取得
@@ -148,7 +144,7 @@ export async function analyzeResume(
       id: resumeId,
       applicant_id: applicantId,
       applicants: {
-        team_id: teamId,
+        company_id: companyId,
       },
     },
   });
@@ -213,7 +209,7 @@ export async function analyzeResume(
       },
     });
 
-    revalidatePath(`/teams/${teamId}/applicants/${applicantId}`);
+    revalidatePath(`/applicants/${applicantId}`);
 
     return {
       success: true,

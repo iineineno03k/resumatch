@@ -3,7 +3,7 @@ import { expect, fn, userEvent, within } from "storybook/test";
 import { OnboardingForm } from "./onboarding-form";
 
 const meta = {
-  title: "Features/Teams/OnboardingForm",
+  title: "Features/Companies/OnboardingForm",
   component: OnboardingForm,
   parameters: {
     layout: "centered",
@@ -32,7 +32,7 @@ export const WithInput: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const input = canvas.getByLabelText("チーム名");
+    const input = canvas.getByLabelText("会社名");
     await userEvent.type(input, "株式会社サンプル");
   },
 };
@@ -43,10 +43,10 @@ export const ValidationError: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole("button", { name: "チームを作成" });
+    const button = canvas.getByRole("button", { name: "会社を登録" });
     await userEvent.click(button);
     await expect(
-      canvas.getByText("チーム名を入力してください"),
+      canvas.getByText("会社名を入力してください"),
     ).toBeInTheDocument();
   },
 };
@@ -55,17 +55,17 @@ export const ServerError: Story = {
   args: {
     onSubmit: fn(async () => ({
       success: false,
-      error: "このチーム名はすでに使用されています",
+      error: "この会社名はすでに使用されています",
     })),
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const input = canvas.getByLabelText("チーム名");
-    await userEvent.type(input, "既存のチーム");
-    const button = canvas.getByRole("button", { name: "チームを作成" });
+    const input = canvas.getByLabelText("会社名");
+    await userEvent.type(input, "既存の会社");
+    const button = canvas.getByRole("button", { name: "会社を登録" });
     await userEvent.click(button);
     await expect(
-      canvas.getByText("このチーム名はすでに使用されています"),
+      canvas.getByText("この会社名はすでに使用されています"),
     ).toBeInTheDocument();
   },
 };
@@ -81,9 +81,9 @@ export const Loading: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const input = canvas.getByLabelText("チーム名");
-    await userEvent.type(input, "新しいチーム");
-    const button = canvas.getByRole("button", { name: "チームを作成" });
+    const input = canvas.getByLabelText("会社名");
+    await userEvent.type(input, "新しい会社");
+    const button = canvas.getByRole("button", { name: "会社を登録" });
     await userEvent.click(button);
   },
 };

@@ -69,7 +69,7 @@ export type Note = {
  * 応募者作成の入力
  */
 export type CreateApplicantInput = {
-  teamId: string;
+  companyId: string;
   jobId: string;
   name: string;
   email?: string;
@@ -80,7 +80,7 @@ export type CreateApplicantInput = {
  * 応募者更新の入力
  */
 export type UpdateApplicantInput = {
-  teamId: string;
+  companyId: string;
   applicantId: string;
   name?: string;
   email?: string;
@@ -92,7 +92,7 @@ export type UpdateApplicantInput = {
  * メモ追加の入力
  */
 export type CreateNoteInput = {
-  teamId: string;
+  companyId: string;
   applicantId: string;
   content: string;
   rating?: number;

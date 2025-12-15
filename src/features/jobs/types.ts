@@ -31,7 +31,7 @@ export type JobListItem = {
  * 求人作成の入力
  */
 export type CreateJobInput = {
-  teamId: string;
+  companyId: string;
   title: string;
   description?: string;
   requirements?: string;
@@ -41,7 +41,7 @@ export type CreateJobInput = {
  * 求人更新の入力
  */
 export type UpdateJobInput = {
-  teamId: string;
+  companyId: string;
   jobId: string;
   title?: string;
   description?: string;

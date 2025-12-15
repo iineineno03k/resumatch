@@ -16,14 +16,14 @@ export const MOCK_USERS = {
   owner: {
     clerkUserId: "user_mock_owner",
     email: "owner@example.com",
-    name: "チームオーナー",
+    name: "会社オーナー",
     avatarUrl: null,
   },
   /** メンバー権限のモックユーザー */
   member: {
     clerkUserId: "user_mock_member",
     email: "member@example.com",
-    name: "チームメンバー",
+    name: "会社メンバー",
     avatarUrl: null,
   },
 } as const satisfies Record<string, AuthUser>;

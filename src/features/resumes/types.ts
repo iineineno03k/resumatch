@@ -24,7 +24,7 @@ export type Resume = {
  * 履歴書アップロードの入力
  */
 export type UploadResumeInput = {
-  teamId: string;
+  companyId: string;
   applicantId: string;
   file: File;
 };
@@ -33,7 +33,7 @@ export type UploadResumeInput = {
  * 履歴書解析の入力
  */
 export type AnalyzeResumeInput = {
-  teamId: string;
+  companyId: string;
   applicantId: string;
   resumeId: string;
 };

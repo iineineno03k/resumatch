@@ -6,7 +6,7 @@ export { createApplicant, createNote, updateApplicant } from "./actions";
 // Queries
 export {
   getApplicantById,
-  getApplicantsByTeamId,
+  getApplicantsByCompanyId,
   getNotesByApplicantId,
 } from "./queries";
 export type {

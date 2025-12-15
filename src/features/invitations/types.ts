@@ -1,4 +1,4 @@
-import type { TeamRole } from "@/features/teams";
+import type { CompanyRole } from "@/features/companies";
 
 /**
  * 招待情報
@@ -6,11 +6,11 @@ import type { TeamRole } from "@/features/teams";
 export type Invitation = {
   id: string;
   token: string;
-  role: TeamRole;
+  role: CompanyRole;
   expiresAt: Date;
   usedAt: Date | null;
-  teamId: string;
-  teamName: string;
+  companyId: string;
+  companyName: string;
 };
 
 /**
@@ -19,21 +19,22 @@ export type Invitation = {
 export type InvitationValidation =
   | {
       valid: true;
-      team: { id: string; name: string };
+      company: { id: string; name: string };
       role: string;
       expiresAt: Date;
     }
   | {
       valid: false;
-      reason: "not_found" | "expired" | "used";
+      reason: "not_found" | "expired" | "used" | "already_member";
+      currentCompanyName?: string;
     };
 
 /**
  * 招待作成の入力
  */
 export type CreateInvitationInput = {
-  teamId: string;
-  role?: TeamRole;
+  companyId: string;
+  role?: CompanyRole;
 };
 
 /**

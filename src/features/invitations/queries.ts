@@ -8,10 +8,10 @@ import type { InvitationValidation } from "./types";
 export async function validateInvitationToken(
   token: string,
 ): Promise<InvitationValidation> {
-  const invitation = await prisma.team_invitations.findUnique({
+  const invitation = await prisma.company_invitations.findUnique({
     where: { token },
     include: {
-      teams: {
+      companies: {
         select: {
           id: true,
           name: true,
@@ -38,9 +38,9 @@ export async function validateInvitationToken(
   // 有効
   return {
     valid: true,
-    team: {
-      id: invitation.teams.id,
-      name: invitation.teams.name,
+    company: {
+      id: invitation.companies.id,
+      name: invitation.companies.name,
     },
     role: invitation.role,
     expiresAt: invitation.expires_at,

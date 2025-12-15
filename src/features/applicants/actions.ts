@@ -24,18 +24,14 @@ const VALID_STATUSES: ApplicantStatus[] = [
 ];
 
 /**
- * メンバーシップチェック
+ * 会社メンバーシップチェック
  */
-async function checkMembership(teamId: string, userId: string) {
-  const membership = await prisma.team_members.findUnique({
-    where: {
-      team_id_user_id: {
-        team_id: teamId,
-        user_id: userId,
-      },
-    },
+async function checkCompanyMembership(companyId: string, userId: string) {
+  const user = await prisma.users.findUnique({
+    where: { id: userId },
+    select: { company_id: true },
   });
-  return membership !== null;
+  return user?.company_id === companyId;
 }
 
 /**
@@ -49,12 +45,12 @@ export async function createApplicant(
     return { success: false, error: "認証が必要です" };
   }
 
-  const { teamId, jobId, name, email, phone } = input;
+  const { companyId, jobId, name, email, phone } = input;
 
   // メンバーシップチェック
-  const isMember = await checkMembership(teamId, user.id);
+  const isMember = await checkCompanyMembership(companyId, user.id);
   if (!isMember) {
-    return { success: false, error: "このチームへのアクセス権限がありません" };
+    return { success: false, error: "この会社へのアクセス権限がありません" };
   }
 
   // バリデーション
@@ -68,7 +64,7 @@ export async function createApplicant(
 
   // 求人存在チェック
   const job = await prisma.jobs.findFirst({
-    where: { id: jobId, team_id: teamId },
+    where: { id: jobId, company_id: companyId },
   });
 
   if (!job) {
@@ -78,7 +74,7 @@ export async function createApplicant(
   // 応募者作成
   const applicant = await prisma.applicants.create({
     data: {
-      team_id: teamId,
+      company_id: companyId,
       job_id: jobId,
       name: name.trim(),
       email: email || null,
@@ -87,7 +83,7 @@ export async function createApplicant(
     },
   });
 
-  revalidatePath(`/teams/${teamId}/applicants`);
+  revalidatePath(`/applicants`);
 
   return {
     success: true,
@@ -109,17 +105,17 @@ export async function updateApplicant(
     return { success: false, error: "認証が必要です" };
   }
 
-  const { teamId, applicantId, name, email, phone, status } = input;
+  const { companyId, applicantId, name, email, phone, status } = input;
 
   // メンバーシップチェック
-  const isMember = await checkMembership(teamId, user.id);
+  const isMember = await checkCompanyMembership(companyId, user.id);
   if (!isMember) {
-    return { success: false, error: "このチームへのアクセス権限がありません" };
+    return { success: false, error: "この会社へのアクセス権限がありません" };
   }
 
   // 応募者存在チェック
   const existingApplicant = await prisma.applicants.findFirst({
-    where: { id: applicantId, team_id: teamId },
+    where: { id: applicantId, company_id: companyId },
   });
 
   if (!existingApplicant) {
@@ -168,8 +164,8 @@ export async function updateApplicant(
     data: updateData,
   });
 
-  revalidatePath(`/teams/${teamId}/applicants`);
-  revalidatePath(`/teams/${teamId}/applicants/${applicantId}`);
+  revalidatePath(`/applicants`);
+  revalidatePath(`/applicants/${applicantId}`);
 
   return {
     success: true,
@@ -188,17 +184,17 @@ export async function createNote(
     return { success: false, error: "認証が必要です" };
   }
 
-  const { teamId, applicantId, content, rating } = input;
+  const { companyId, applicantId, content, rating } = input;
 
   // メンバーシップチェック
-  const isMember = await checkMembership(teamId, user.id);
+  const isMember = await checkCompanyMembership(companyId, user.id);
   if (!isMember) {
-    return { success: false, error: "このチームへのアクセス権限がありません" };
+    return { success: false, error: "この会社へのアクセス権限がありません" };
   }
 
   // 応募者存在チェック
   const applicant = await prisma.applicants.findFirst({
-    where: { id: applicantId, team_id: teamId },
+    where: { id: applicantId, company_id: companyId },
   });
 
   if (!applicant) {
@@ -235,7 +231,7 @@ export async function createNote(
     },
   });
 
-  revalidatePath(`/teams/${teamId}/applicants/${applicantId}`);
+  revalidatePath(`/applicants/${applicantId}`);
 
   return {
     success: true,

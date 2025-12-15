@@ -2,6 +2,8 @@
 
 // Actions
 export { acceptInvitation, createInvitation } from "./actions";
+// Components
+export { InviteCard } from "./components";
 
 // Queries
 export { validateInvitationToken } from "./queries";

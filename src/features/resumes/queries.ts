@@ -6,14 +6,14 @@ import type { AnalysisStatus, Resume } from "./types";
  * 応募者の履歴書を取得
  */
 export async function getResumeByApplicantId(
-  teamId: string,
+  companyId: string,
   applicantId: string,
 ): Promise<Resume | null> {
-  // まず応募者がチームに所属しているか確認
+  // まず応募者が会社に所属しているか確認
   const applicant = await prisma.applicants.findFirst({
     where: {
       id: applicantId,
-      team_id: teamId,
+      company_id: companyId,
     },
     select: { id: true },
   });
@@ -47,14 +47,14 @@ export async function getResumeByApplicantId(
  * 履歴書IDで履歴書を取得
  */
 export async function getResumeById(
-  teamId: string,
+  companyId: string,
   resumeId: string,
 ): Promise<Resume | null> {
   const resume = await prisma.resumes.findFirst({
     where: {
       id: resumeId,
       applicants: {
-        team_id: teamId,
+        company_id: companyId,
       },
     },
   });

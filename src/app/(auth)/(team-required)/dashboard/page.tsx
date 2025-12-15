@@ -1,11 +1,10 @@
 import { Header } from "@/components/layout/header";
-import { getTeamsByUserId } from "@/features/teams";
+import { getUserCompany } from "@/features/companies";
 import { getCurrentUser } from "@/lib/auth";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const teams = user ? await getTeamsByUserId(user.id) : [];
-  const currentTeam = teams[0];
+  const company = user ? await getUserCompany(user.id) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -13,20 +12,20 @@ export default async function DashboardPage() {
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-foreground">ダッシュボード</h1>
-          {currentTeam && (
-            <p className="mt-1 text-muted-foreground">{currentTeam.name}</p>
+          {company && (
+            <p className="mt-1 text-muted-foreground">{company.name}</p>
           )}
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <DashboardCard
             title="求人"
-            value={currentTeam?.jobCount ?? 0}
+            value={company?.jobCount ?? 0}
             href="/jobs"
           />
           <DashboardCard
-            title="チームメンバー"
-            value={currentTeam?.memberCount ?? 0}
+            title="メンバー"
+            value={company?.memberCount ?? 0}
             href="/settings"
           />
         </div>

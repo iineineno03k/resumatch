@@ -9,7 +9,7 @@ import type { ActionResult, Invitation } from "./types";
  * 招待リンクを発行（admin以上のみ）
  */
 export async function createInvitation(input: {
-  teamId: string;
+  companyId: string;
   role?: "member" | "admin";
 }): Promise<ActionResult<Invitation>> {
   const user = await getCurrentUser();
@@ -17,19 +17,19 @@ export async function createInvitation(input: {
     return { success: false, error: "認証が必要です" };
   }
 
-  const { teamId, role = "member" } = input;
+  const { companyId, role = "member" } = input;
 
-  // 権限チェック
-  const membership = await prisma.team_members.findUnique({
-    where: {
-      team_id_user_id: {
-        team_id: teamId,
-        user_id: user.id,
-      },
-    },
+  // ユーザーがこの会社に所属しているか確認
+  const dbUser = await prisma.users.findUnique({
+    where: { id: user.id },
+    select: { company_id: true, role: true },
   });
 
-  if (!membership || !["owner", "admin"].includes(membership.role)) {
+  if (!dbUser?.company_id || dbUser.company_id !== companyId) {
+    return { success: false, error: "この会社へのアクセス権限がありません" };
+  }
+
+  if (!["owner", "admin"].includes(dbUser.role ?? "")) {
     return { success: false, error: "この操作には管理者権限が必要です" };
   }
 
@@ -46,22 +46,22 @@ export async function createInvitation(input: {
   expiresAt.setDate(expiresAt.getDate() + 7);
 
   // 招待作成
-  const invitation = await prisma.team_invitations.create({
+  const invitation = await prisma.company_invitations.create({
     data: {
-      team_id: teamId,
+      company_id: companyId,
       invited_by_user_id: user.id,
       token,
       role,
       expires_at: expiresAt,
     },
     include: {
-      teams: {
+      companies: {
         select: { name: true },
       },
     },
   });
 
-  revalidatePath(`/teams/${teamId}/settings`);
+  revalidatePath(`/settings`);
 
   return {
     success: true,
@@ -71,28 +71,41 @@ export async function createInvitation(input: {
       role: invitation.role as Invitation["role"],
       expiresAt: invitation.expires_at,
       usedAt: invitation.used_at,
-      teamId: invitation.team_id,
-      teamName: invitation.teams.name,
+      companyId: invitation.company_id,
+      companyName: invitation.companies.name,
     },
   };
 }
 
 /**
- * 招待を受け入れてチームに参加
+ * 招待を受け入れて会社に参加
+ * 1ユーザー = 1会社なので、すでに会社に所属している場合はエラー
  */
 export async function acceptInvitation(
   token: string,
-): Promise<ActionResult<{ teamId: string; teamName: string; role: string }>> {
+): Promise<
+  ActionResult<{ companyId: string; companyName: string; role: string }>
+> {
   const user = await getCurrentUser();
   if (!user) {
     return { success: false, error: "認証が必要です" };
   }
 
+  // すでに会社に所属しているかチェック
+  const dbUser = await prisma.users.findUnique({
+    where: { id: user.id },
+    select: { company_id: true },
+  });
+
+  if (dbUser?.company_id) {
+    return { success: false, error: "すでに会社に所属しています" };
+  }
+
   // 招待を検索
-  const invitation = await prisma.team_invitations.findUnique({
+  const invitation = await prisma.company_invitations.findUnique({
     where: { token },
     include: {
-      teams: {
+      companies: {
         select: { id: true, name: true },
       },
     },
@@ -110,30 +123,16 @@ export async function acceptInvitation(
     return { success: false, error: "この招待の有効期限が切れています" };
   }
 
-  // すでにメンバーかチェック
-  const existingMembership = await prisma.team_members.findUnique({
-    where: {
-      team_id_user_id: {
-        team_id: invitation.team_id,
-        user_id: user.id,
-      },
-    },
-  });
-
-  if (existingMembership) {
-    return { success: false, error: "すでにこのチームのメンバーです" };
-  }
-
-  // トランザクションでメンバー追加と招待更新
+  // トランザクションでユーザー更新と招待更新
   await prisma.$transaction([
-    prisma.team_members.create({
+    prisma.users.update({
+      where: { id: user.id },
       data: {
-        team_id: invitation.team_id,
-        user_id: user.id,
+        company_id: invitation.company_id,
         role: invitation.role,
       },
     }),
-    prisma.team_invitations.update({
+    prisma.company_invitations.update({
       where: { id: invitation.id },
       data: { used_at: new Date() },
     }),
@@ -144,8 +143,8 @@ export async function acceptInvitation(
   return {
     success: true,
     data: {
-      teamId: invitation.teams.id,
-      teamName: invitation.teams.name,
+      companyId: invitation.companies.id,
+      companyName: invitation.companies.name,
       role: invitation.role,
     },
   };

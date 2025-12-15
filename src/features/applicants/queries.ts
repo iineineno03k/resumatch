@@ -8,10 +8,10 @@ import type {
 } from "./types";
 
 /**
- * チームの応募者一覧を取得（フィルタ、ページネーション対応）
+ * 会社の応募者一覧を取得（フィルタ、ページネーション対応）
  */
-export async function getApplicantsByTeamId(
-  teamId: string,
+export async function getApplicantsByCompanyId(
+  companyId: string,
   options?: ApplicantFilterOptions,
 ): Promise<{ applicants: ApplicantListItem[]; total: number }> {
   const page = options?.page ?? 1;
@@ -19,7 +19,7 @@ export async function getApplicantsByTeamId(
   const offset = (page - 1) * limit;
 
   const where = {
-    team_id: teamId,
+    company_id: companyId,
     ...(options?.jobId && { job_id: options.jobId }),
     ...(options?.status && { status: options.status }),
   };
@@ -67,13 +67,13 @@ export async function getApplicantsByTeamId(
  * 応募者詳細を取得
  */
 export async function getApplicantById(
-  teamId: string,
+  companyId: string,
   applicantId: string,
 ): Promise<ApplicantDetail | null> {
   const applicant = await prisma.applicants.findFirst({
     where: {
       id: applicantId,
-      team_id: teamId,
+      company_id: companyId,
     },
     include: {
       jobs: {

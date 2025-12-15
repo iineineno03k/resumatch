@@ -1,7 +1,7 @@
 /**
- * チーム情報
+ * 会社情報
  */
-export type Team = {
+export type Company = {
   id: string;
   name: string;
   slug: string;
@@ -9,23 +9,23 @@ export type Team = {
 };
 
 /**
- * ユーザーが所属するチーム（役割付き）
+ * ユーザーの会社（役割付き）
  */
-export type TeamWithRole = Team & {
-  role: TeamRole;
+export type CompanyWithRole = Company & {
+  role: CompanyRole;
   memberCount: number;
   jobCount: number;
 };
 
 /**
- * チームの役割
+ * 会社での役割
  */
-export type TeamRole = "owner" | "admin" | "member";
+export type CompanyRole = "owner" | "admin" | "member";
 
 /**
- * チーム作成の入力
+ * 会社作成の入力
  */
-export type CreateTeamInput = {
+export type CreateCompanyInput = {
   name: string;
 };
 

@@ -1,11 +1,10 @@
-import { createTeam } from "@/features/teams";
-import { OnboardingForm } from "@/features/teams/components/onboarding-form";
+import { createCompany, OnboardingForm } from "@/features/companies";
 
-async function handleCreateTeam(
+async function handleCreateCompany(
   name: string,
 ): Promise<{ success: boolean; error?: string }> {
   "use server";
-  const result = await createTeam({ name });
+  const result = await createCompany({ name });
   if (result.success) {
     return { success: true };
   }
@@ -15,7 +14,7 @@ async function handleCreateTeam(
 export default function OnboardingPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <OnboardingForm onSubmit={handleCreateTeam} />
+      <OnboardingForm onSubmit={handleCreateCompany} />
     </div>
   );
 }
