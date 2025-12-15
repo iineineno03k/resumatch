@@ -1,27 +1,38 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Supabase Storage クライアント
  * 履歴書PDFのアップロード・ダウンロードに使用
+ * 遅延初期化パターンで、関数呼び出し時にのみクライアントを生成
  */
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+let supabaseAdmin: SupabaseClient | null = null;
 
-if (!supabaseUrl) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
+function getSupabaseAdmin(): SupabaseClient {
+  if (supabaseAdmin) {
+    return supabaseAdmin;
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl) {
+    throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
+  }
+
+  if (!supabaseServiceKey) {
+    throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set");
+  }
+
+  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+
+  return supabaseAdmin;
 }
-
-if (!supabaseServiceKey) {
-  throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set");
-}
-
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
 
 /**
  * 履歴書ファイルをStorageにアップロード
@@ -39,8 +50,8 @@ export async function uploadResumeFile(
 ): Promise<{ success: true; url: string } | { success: false; error: string }> {
   const filePath = `${companyId}/${applicantId}/${Date.now()}_${fileName}`;
 
-  const { error } = await supabaseAdmin.storage
-    .from("resumes")
+  const { error } = await getSupabaseAdmin()
+    .storage.from("resumes")
     .upload(filePath, file, {
       contentType: "application/pdf",
       upsert: false,
@@ -50,8 +61,8 @@ export async function uploadResumeFile(
     return { success: false, error: error.message };
   }
 
-  const { data: urlData } = supabaseAdmin.storage
-    .from("resumes")
+  const { data: urlData } = getSupabaseAdmin()
+    .storage.from("resumes")
     .getPublicUrl(filePath);
 
   return { success: true, url: urlData.publicUrl };
@@ -74,8 +85,8 @@ export async function downloadResumeFile(
   );
   const filePath = pathMatch ? pathMatch[1] : fileUrl;
 
-  const { data, error } = await supabaseAdmin.storage
-    .from("resumes")
+  const { data, error } = await getSupabaseAdmin()
+    .storage.from("resumes")
     .download(filePath);
 
   if (error) {
