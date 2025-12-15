@@ -33,6 +33,16 @@ export async function getAuthUser(): Promise<AuthUser | null> {
 }
 
 /**
+ * モックユーザーのDB ID（開発用）
+ * 実際のDBにはこのIDで作成する必要がある
+ */
+const MOCK_USER_DB_IDS: Record<string, string> = {
+  user_mock_default: "00000000-0000-0000-0000-000000000001",
+  user_mock_owner: "00000000-0000-0000-0000-000000000002",
+  user_mock_member: "00000000-0000-0000-0000-000000000003",
+};
+
+/**
  * DB の users テーブルと紐づいた現在のユーザー情報を取得
  * ユーザーが DB に存在しない場合は自動作成する
  *
@@ -42,6 +52,19 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   const authUser = await getAuthUser();
   if (!authUser) {
     return null;
+  }
+
+  // モックモードの場合はDBにアクセスせずモックデータを返す
+  if (isAuthMockEnabled()) {
+    return {
+      id:
+        MOCK_USER_DB_IDS[authUser.clerkUserId] ||
+        MOCK_USER_DB_IDS.user_mock_default,
+      clerkUserId: authUser.clerkUserId,
+      email: authUser.email,
+      name: authUser.name,
+      avatarUrl: authUser.avatarUrl,
+    };
   }
 
   // DB からユーザーを取得、なければ作成
