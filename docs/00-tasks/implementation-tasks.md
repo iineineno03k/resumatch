@@ -166,10 +166,9 @@ src/
 - [x] 認証モック（`USE_AUTH_MOCK=true` で Clerk 不要）
 - [x] 認証ヘルパー（`getCurrentUser()`, `requireAuth()`）
 
-### 4.2 features/teams
-- [x] `getTeamsByUserId()` - 所属チーム一覧取得
-- [x] `getTeamWithMembership()` - チーム詳細取得
-- [x] `createTeam()` - チーム作成（Server Action）
+### 4.2 features/companies（旧 teams）
+- [x] `getUserCompany()` - 所属会社取得（1ユーザー = 1会社に変更）
+- [x] `createCompany()` - 会社作成（Server Action）
 
 ### 4.3 features/invitations
 - [x] `validateInvitationToken()` - 招待検証
@@ -177,13 +176,13 @@ src/
 - [x] `acceptInvitation()` - 招待受け入れ（Server Action）
 
 ### 4.4 features/jobs
-- [x] `getJobsByTeamId()` - 求人一覧取得
+- [x] `getJobsByCompanyId()` - 求人一覧取得
 - [x] `getJobById()` - 求人詳細取得
 - [x] `createJob()` - 求人作成（Server Action）
 - [x] `updateJob()` - 求人更新（Server Action）
 
 ### 4.5 features/applicants
-- [x] `getApplicantsByTeamId()` - 応募者一覧取得（フィルタ、ページネーション）
+- [x] `getApplicantsByCompanyId()` - 応募者一覧取得（フィルタ、ページネーション）
 - [x] `getApplicantById()` - 応募者詳細取得
 - [x] `getNotesByApplicantId()` - メモ一覧取得
 - [x] `createApplicant()` - 応募者登録（Server Action）
@@ -298,17 +297,20 @@ UIライブラリは **shadcn/ui** を使用。
 
 ---
 
-### 6.5 招待フロー画面
+### 6.5 招待フロー画面（完了）
 
 **6.5.1 招待リンク画面**
-- [ ] `/invite/[token]` - 招待情報表示
-- [ ] 未ログイン時: ログイン誘導
-- [ ] ログイン済み: 参加確認
-- [ ] **レビュー:** Storybook で確認（各状態）
+- [x] `/invite/[token]` - 招待情報表示
+- [x] 未ログイン時: ログイン誘導
+- [x] ログイン済み: 参加確認
+- [x] すでに会社所属時: エラー表示
+- [x] **レビュー:** Storybook で確認（各状態）
 
 **6.5.2 フロー実装**
-- [ ] 招待検証 API 連携
-- [ ] 参加処理 → ダッシュボードへ遷移
+- [x] 招待検証 API 連携
+- [x] 参加処理 → ダッシュボードへ遷移
+
+**備考:** team → company リファクタリングも同時に実施（1ユーザー = 1会社モデルに変更）
 
 ---
 
