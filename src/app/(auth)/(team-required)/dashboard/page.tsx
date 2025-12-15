@@ -1,14 +1,22 @@
+import { redirect } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { getUserCompany } from "@/features/companies";
 import { getCurrentUser } from "@/lib/auth";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const company = user ? await getUserCompany(user.id) : null;
+  if (!user) {
+    redirect("/sign-in");
+  }
+
+  const company = await getUserCompany(user.id);
+  if (!company) {
+    redirect("/onboarding");
+  }
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header user={{ name: user.name, email: user.email, avatarUrl: user.avatarUrl }} />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-foreground">ダッシュボード</h1>

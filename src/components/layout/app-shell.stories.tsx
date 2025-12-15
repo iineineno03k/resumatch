@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppShell } from "./app-shell";
 
+const mockUser = {
+  name: "開発ユーザー",
+  email: "dev@example.com",
+  avatarUrl: null,
+};
+
 const meta = {
   title: "Layout/AppShell",
   component: AppShell,
@@ -15,6 +21,9 @@ const meta = {
     },
   },
   tags: ["autodocs"],
+  args: {
+    user: mockUser,
+  },
 } satisfies Meta<typeof AppShell>;
 
 export default meta;
