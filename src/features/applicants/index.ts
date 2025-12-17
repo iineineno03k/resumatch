@@ -1,5 +1,3 @@
-// Types
-
 // Actions
 export { createApplicant, createNote, updateApplicant } from "./actions";
 
@@ -9,6 +7,11 @@ export {
   getApplicantsByCompanyId,
   getNotesByApplicantId,
 } from "./queries";
+
+// Schema
+export { type ApplicantFormValues, applicantFormSchema } from "./schema";
+
+// Types
 export type {
   ActionResult,
   ApplicantDetail,
