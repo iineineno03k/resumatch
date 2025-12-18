@@ -160,7 +160,7 @@ export function FileUpload({
           ここにファイルをドラッグ&ドロップ
         </p>
         <p className="text-xs text-muted-foreground mb-4">または</p>
-        <label>
+        <label className="cursor-pointer">
           <input
             type="file"
             accept={accept}
@@ -168,15 +168,14 @@ export function FileUpload({
             disabled={disabled}
             className="sr-only"
           />
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={disabled}
-            asChild
+          <span
+            className={cn(
+              "inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+              disabled && "pointer-events-none opacity-50",
+            )}
           >
-            <span>ファイルを選択</span>
-          </Button>
+            ファイルを選択
+          </span>
         </label>
         <p className="text-xs text-muted-foreground mt-4">
           {accept} ファイル（最大 {Math.round(maxSize / 1024 / 1024)}MB）
