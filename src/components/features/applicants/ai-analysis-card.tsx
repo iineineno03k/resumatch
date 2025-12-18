@@ -1,12 +1,13 @@
 "use client";
 
-import { Loader2, RefreshCw } from "lucide-react";
+import { Loader2, RefreshCw, Upload } from "lucide-react";
 import { useState, useTransition } from "react";
 import { EmptyState } from "@/components/common/empty-state";
+import { FileUpload } from "@/components/common/file-upload";
 import { SkillTagList } from "@/components/common/skill-tag";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { analyzeResume } from "@/features/resumes";
+import { analyzeResume, uploadResume } from "@/features/resumes";
 import type { AIAnalysis } from "@/lib/ai";
 
 type ResumeData = {
@@ -31,13 +32,83 @@ export function AIAnalysisCard({
 }: AIAnalysisCardProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [showUpload, setShowUpload] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleUpload = () => {
+    if (!selectedFile) return;
+
+    setError(null);
+    startTransition(async () => {
+      const result = await uploadResume({
+        companyId,
+        applicantId,
+        file: selectedFile,
+      });
+      if (!result.success) {
+        setError(result.error);
+      } else {
+        setShowUpload(false);
+        setSelectedFile(null);
+      }
+    });
+  };
 
   if (!resume) {
+    if (showUpload) {
+      return (
+        <div className="space-y-4">
+          <FileUpload
+            accept=".pdf"
+            maxSize={10 * 1024 * 1024}
+            onFileSelect={setSelectedFile}
+            disabled={isPending}
+          />
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleUpload}
+              disabled={!selectedFile || isPending}
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  アップロード中...
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-2 h-4 w-4" />
+                  アップロード
+                </>
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowUpload(false);
+                setSelectedFile(null);
+                setError(null);
+              }}
+              disabled={isPending}
+            >
+              キャンセル
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <EmptyState
-        title="履歴書がありません"
-        description="この応募者には履歴書がアップロードされていません。"
-      />
+      <div className="flex flex-col items-center justify-center py-8">
+        <EmptyState
+          title="履歴書がありません"
+          description="この応募者には履歴書がアップロードされていません。"
+        />
+        <Button onClick={() => setShowUpload(true)} className="mt-4">
+          <Upload className="mr-2 h-4 w-4" />
+          履歴書をアップロード
+        </Button>
+      </div>
     );
   }
 
