@@ -38,7 +38,7 @@ export function ApplicantTable({ applicants }: ApplicantTableProps) {
         <TableBody>
           {applicants.map((applicant) => (
             <TableRow key={applicant.id}>
-              <TableCell>
+              <TableCell className="max-w-[250px]">
                 <Link
                   href={`/applicants/${applicant.id}`}
                   className="font-medium text-foreground hover:underline"
@@ -46,7 +46,7 @@ export function ApplicantTable({ applicants }: ApplicantTableProps) {
                   {applicant.name}
                 </Link>
                 {applicant.aiSummary && (
-                  <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
+                  <p className="mt-1 truncate text-sm text-muted-foreground">
                     {applicant.aiSummary}
                   </p>
                 )}
