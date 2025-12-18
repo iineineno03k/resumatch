@@ -34,6 +34,60 @@ export type AnalyzeError = {
 
 export type AnalyzeOutput = AnalyzeResult | AnalyzeError;
 
+/**
+ * AIモックモードを使用するかどうか（実行時に評価）
+ */
+function isAIMockEnabled(): boolean {
+  return process.env.USE_AI_MOCK === "true";
+}
+
+/**
+ * モック用のAI解析結果を生成
+ */
+function generateMockAnalysis(resumeText: string): AIAnalysis {
+  // テキストからいくつかの情報を抽出してモックデータに反映
+  const hasJavaScript = resumeText.toLowerCase().includes("javascript");
+  const hasTypeScript = resumeText.toLowerCase().includes("typescript");
+  const hasReact = resumeText.toLowerCase().includes("react");
+  const hasPython = resumeText.toLowerCase().includes("python");
+
+  const skills: string[] = [];
+  if (hasJavaScript) skills.push("JavaScript");
+  if (hasTypeScript) skills.push("TypeScript");
+  if (hasReact) skills.push("React");
+  if (hasPython) skills.push("Python");
+  if (skills.length === 0) skills.push("コミュニケーション", "問題解決");
+
+  return {
+    summary:
+      "【モック解析結果】経験豊富なエンジニアで、複数のプロジェクトでの開発経験があります。チームワークとコミュニケーション能力に優れています。",
+    skills,
+    experience: [
+      {
+        company: "株式会社サンプル",
+        position: "ソフトウェアエンジニア",
+        period: "2020年4月 - 現在",
+        description:
+          "Webアプリケーションの設計・開発を担当。チームリーダーとして5名のメンバーをマネジメント。",
+      },
+      {
+        company: "テスト株式会社",
+        position: "ジュニアエンジニア",
+        period: "2018年4月 - 2020年3月",
+        description: "バックエンド開発およびAPI設計を担当。",
+      },
+    ],
+    education: [
+      {
+        school: "東京工業大学",
+        degree: "情報工学部 学士",
+        period: "2014年4月 - 2018年3月",
+      },
+    ],
+    certifications: ["基本情報技術者", "応用情報技術者"],
+  };
+}
+
 const RESUME_ANALYSIS_PROMPT = `あなたは履歴書・職務経歴書の解析を行うAIアシスタントです。
 以下のテキストは履歴書または職務経歴書から抽出されたものです。
 このテキストを分析し、以下のJSON形式で構造化してください。
@@ -96,9 +150,19 @@ export async function analyzeResume(
     };
   }
 
+  // モックモードの場合はモックデータを返す
+  if (isAIMockEnabled()) {
+    // 少し遅延を入れてリアルな動作をシミュレート
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return {
+      success: true,
+      analysis: generateMockAnalysis(resumeText),
+    };
+  }
+
   try {
     const genAI = getGeminiClient();
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = RESUME_ANALYSIS_PROMPT + resumeText;
 
