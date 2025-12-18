@@ -1,10 +1,25 @@
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Supabase Storage クライアント
- * 履歴書PDFのアップロード・ダウンロードに使用
- * 遅延初期化パターンで、関数呼び出し時にのみクライアントを生成
+ * ストレージアダプター
+ * 開発環境: ローカルファイルシステム（USE_LOCAL_STORAGE=true）
+ * 本番環境: Supabase Storage
  */
+
+/**
+ * ローカルストレージを使用するかどうか（実行時に評価）
+ */
+function useLocalStorage(): boolean {
+  return process.env.USE_LOCAL_STORAGE === "true";
+}
+
+function getLocalStorageDir(): string {
+  return path.join(process.cwd(), "uploads", "resumes");
+}
+
+// ========== Supabase Storage ==========
 
 let supabaseAdmin: SupabaseClient | null = null;
 
@@ -34,15 +49,74 @@ function getSupabaseAdmin(): SupabaseClient {
   return supabaseAdmin;
 }
 
-/**
- * 履歴書ファイルをStorageにアップロード
- * @param companyId 会社ID
- * @param applicantId 応募者ID
- * @param file ファイルデータ
- * @param fileName ファイル名
- * @returns アップロード結果
- */
-export async function uploadResumeFile(
+// ========== Local File Storage ==========
+
+async function ensureLocalDir(dirPath: string): Promise<void> {
+  try {
+    await fs.mkdir(dirPath, { recursive: true });
+  } catch {
+    // ディレクトリが既に存在する場合は無視
+  }
+}
+
+async function uploadLocal(
+  companyId: string,
+  applicantId: string,
+  file: Buffer | Uint8Array,
+  fileName: string,
+): Promise<{ success: true; url: string } | { success: false; error: string }> {
+  try {
+    const dirPath = path.join(getLocalStorageDir(), companyId, applicantId);
+    await ensureLocalDir(dirPath);
+
+    const safeFileName = `${Date.now()}_${fileName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+    const filePath = path.join(dirPath, safeFileName);
+
+    await fs.writeFile(filePath, file);
+
+    // ローカルURLを返す（API経由でアクセス）
+    const url = `/api/resumes/${companyId}/${applicantId}/${safeFileName}`;
+    return { success: true, url };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "ファイル保存に失敗しました";
+    return { success: false, error: message };
+  }
+}
+
+async function downloadLocal(
+  fileUrl: string,
+): Promise<
+  { success: true; data: ArrayBuffer } | { success: false; error: string }
+> {
+  try {
+    // URL形式: /api/resumes/{companyId}/{applicantId}/{fileName}
+    const match = fileUrl.match(/\/api\/resumes\/(.+)$/);
+    if (!match) {
+      return { success: false, error: "無効なファイルURLです" };
+    }
+
+    const relativePath = match[1];
+    const filePath = path.join(getLocalStorageDir(), relativePath);
+
+    const buffer = await fs.readFile(filePath);
+    return {
+      success: true,
+      data: buffer.buffer.slice(
+        buffer.byteOffset,
+        buffer.byteOffset + buffer.byteLength,
+      ),
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "ファイル読み込みに失敗しました";
+    return { success: false, error: message };
+  }
+}
+
+// ========== Supabase Storage ==========
+
+async function uploadSupabase(
   companyId: string,
   applicantId: string,
   file: Buffer | Uint8Array,
@@ -68,12 +142,7 @@ export async function uploadResumeFile(
   return { success: true, url: urlData.publicUrl };
 }
 
-/**
- * 履歴書ファイルをStorageから取得
- * @param fileUrl ファイルURL（またはパス）
- * @returns ファイルデータ
- */
-export async function downloadResumeFile(
+async function downloadSupabase(
   fileUrl: string,
 ): Promise<
   { success: true; data: ArrayBuffer } | { success: false; error: string }
@@ -95,4 +164,37 @@ export async function downloadResumeFile(
 
   const arrayBuffer = await data.arrayBuffer();
   return { success: true, data: arrayBuffer };
+}
+
+// ========== Public API ==========
+
+/**
+ * 履歴書ファイルをStorageにアップロード
+ * USE_LOCAL_STORAGE=true の場合はローカルファイルシステムを使用
+ */
+export async function uploadResumeFile(
+  companyId: string,
+  applicantId: string,
+  file: Buffer | Uint8Array,
+  fileName: string,
+): Promise<{ success: true; url: string } | { success: false; error: string }> {
+  if (useLocalStorage()) {
+    return uploadLocal(companyId, applicantId, file, fileName);
+  }
+  return uploadSupabase(companyId, applicantId, file, fileName);
+}
+
+/**
+ * 履歴書ファイルをStorageから取得
+ * USE_LOCAL_STORAGE=true の場合はローカルファイルシステムから取得
+ */
+export async function downloadResumeFile(
+  fileUrl: string,
+): Promise<
+  { success: true; data: ArrayBuffer } | { success: false; error: string }
+> {
+  if (useLocalStorage()) {
+    return downloadLocal(fileUrl);
+  }
+  return downloadSupabase(fileUrl);
 }
