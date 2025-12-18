@@ -16,13 +16,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 type Props = {
-  /** フォーム送信後のリダイレクト先（デフォルト: /dashboard） */
+  /** フォーム送信後のリダイレクト先（デフォルト: /jobs） */
   redirectTo?: string;
   /** 会社作成処理（Server Action を渡す） */
   onSubmit: (name: string) => Promise<{ success: boolean; error?: string }>;
 };
 
-export function OnboardingForm({ redirectTo = "/dashboard", onSubmit }: Props) {
+export function OnboardingForm({ redirectTo = "/jobs", onSubmit }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [companyName, setCompanyName] = useState("");

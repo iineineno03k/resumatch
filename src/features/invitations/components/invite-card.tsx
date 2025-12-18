@@ -55,7 +55,7 @@ export function InviteCard({ validation, isLoggedIn, token, onAccept }: Props) {
     startTransition(async () => {
       const result = await onAccept();
       if (result.success) {
-        router.push("/dashboard");
+        router.push("/jobs");
       } else {
         setError(result.error ?? "参加に失敗しました");
       }

@@ -69,7 +69,7 @@ export async function createCompany(input: {
     return newCompany;
   });
 
-  revalidatePath("/dashboard");
+  revalidatePath("/jobs");
 
   return {
     success: true,

@@ -138,7 +138,7 @@ export async function acceptInvitation(
     }),
   ]);
 
-  revalidatePath("/dashboard");
+  revalidatePath("/jobs");
 
   return {
     success: true,
