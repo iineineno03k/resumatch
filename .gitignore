@@ -78,3 +78,6 @@ storybook-static/
 
 # Test fixtures
 /test-fixtures/
+
+# Playwright MCP downloads
+.playwright-mcp/
