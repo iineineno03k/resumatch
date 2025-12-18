@@ -72,3 +72,9 @@ storybook-static/
 
 # Tesseract language data
 *.traineddata
+
+# Local file uploads (development)
+/uploads/
+
+# Test fixtures
+/test-fixtures/
