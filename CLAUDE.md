@@ -194,14 +194,21 @@ bun run build
 
 **自分で解決できない場合のみユーザーに相談する。**
 
-### 開発時の認証モック
+### 開発時のモック設定
 
-開発時に Clerk を使わずに動作確認するには、環境変数を設定:
+開発時に外部サービスなしで動作確認するには、以下の環境変数を設定:
 
 ```bash
-# .env.local に追加
-USE_AUTH_MOCK=true
-MOCK_USER_KEY=default  # default, owner, member から選択
+# .env.local に追加（または起動時に指定）
+USE_AUTH_MOCK=true       # Clerk認証をモック
+USE_LOCAL_STORAGE=true   # Supabase Storageの代わりにローカルファイルを使用
+USE_AI_MOCK=true         # Google AI APIの代わりにモックデータを使用
+MOCK_USER_KEY=default    # default, owner, member から選択
+```
+
+**起動コマンド例（全モック有効）:**
+```bash
+USE_AUTH_MOCK=true USE_LOCAL_STORAGE=true USE_AI_MOCK=true bun run dev
 ```
 
 **モックユーザー:**
@@ -210,6 +217,13 @@ MOCK_USER_KEY=default  # default, owner, member から選択
 | default | dev@example.com | デフォルト |
 | owner | owner@example.com | チームオーナー |
 | member | member@example.com | チームメンバー |
+
+**モック機能の詳細:**
+| 環境変数 | 対象 | モック時の動作 |
+|---------|------|---------------|
+| `USE_AUTH_MOCK` | Clerk認証 | モックユーザーでログイン |
+| `USE_LOCAL_STORAGE` | Supabase Storage | `uploads/` ディレクトリにファイル保存 |
+| `USE_AI_MOCK` | Google AI API | 固定のモック解析結果を返す |
 
 **API での認証取得:**
 ```typescript
