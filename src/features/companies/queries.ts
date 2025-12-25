@@ -1,13 +1,15 @@
+import { cache } from "react";
 import prisma from "@/lib/db/client";
 import type { CompanyWithRole } from "./types";
 
 /**
  * ユーザーの所属会社を取得
  * 1ユーザー = 1会社の設計
+ * cache() でリクエスト内の重複呼び出しを除去
  */
-export async function getUserCompany(
+export const getUserCompany = cache(async (
   userId: string,
-): Promise<CompanyWithRole | null> {
+): Promise<CompanyWithRole | null> => {
   const user = await prisma.users.findUnique({
     where: { id: userId },
     include: {
@@ -37,7 +39,7 @@ export async function getUserCompany(
     jobCount: user.companies._count.jobs,
     createdAt: user.companies.created_at,
   };
-}
+});
 
 /**
  * 会社を取得（メンバーシップ確認付き）

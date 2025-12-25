@@ -1,4 +1,5 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { cache } from "react";
 import prisma from "@/lib/db/client";
 import { getMockUser, isAuthMockEnabled } from "./mock";
 import type { AuthUser, CurrentUser } from "./types";
@@ -9,10 +10,11 @@ export type { AuthUser, CurrentUser } from "./types";
 /**
  * 認証済みユーザー情報を取得（Clerk から）
  * モックモードの場合はモックユーザーを返す
+ * cache() でリクエスト内の重複呼び出しを除去
  *
  * @returns AuthUser | null - 未認証の場合は null
  */
-export async function getAuthUser(): Promise<AuthUser | null> {
+export const getAuthUser = cache(async (): Promise<AuthUser | null> => {
   // モックモードの場合
   if (isAuthMockEnabled()) {
     return getMockUser();
@@ -30,7 +32,7 @@ export async function getAuthUser(): Promise<AuthUser | null> {
     name: [user.firstName, user.lastName].filter(Boolean).join(" ") || null,
     avatarUrl: user.imageUrl || null,
   };
-}
+});
 
 /**
  * モックユーザーのDB ID（開発用）
@@ -45,10 +47,11 @@ const MOCK_USER_DB_IDS: Record<string, string> = {
 /**
  * DB の users テーブルと紐づいた現在のユーザー情報を取得
  * ユーザーが DB に存在しない場合は自動作成する
+ * cache() でリクエスト内の重複呼び出しを除去
  *
  * @returns CurrentUser | null - 未認証の場合は null
  */
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const authUser = await getAuthUser();
   if (!authUser) {
     return null;
@@ -91,7 +94,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     name: dbUser.name,
     avatarUrl: dbUser.avatar_url,
   };
-}
+});
 
 /**
  * 認証必須の API で使用
