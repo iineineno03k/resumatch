@@ -7,6 +7,9 @@ import {
 } from "@/features/invitations";
 import { getAuthUser, getCurrentUser } from "@/lib/auth";
 
+// ビルド時の静的生成を無効化（DB接続が必要なため）
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ token: string }>;
 };

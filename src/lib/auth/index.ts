@@ -67,22 +67,22 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     };
   }
 
-  // DB からユーザーを取得、なければ作成
-  let dbUser = await prisma.users.findUnique({
+  // DB からユーザーを取得、なければ作成（upsert で競合を回避）
+  const dbUser = await prisma.users.upsert({
     where: { clerk_user_id: authUser.clerkUserId },
+    update: {
+      // Webhook と競合した場合は最新情報で更新
+      email: authUser.email,
+      name: authUser.name,
+      avatar_url: authUser.avatarUrl,
+    },
+    create: {
+      clerk_user_id: authUser.clerkUserId,
+      email: authUser.email,
+      name: authUser.name,
+      avatar_url: authUser.avatarUrl,
+    },
   });
-
-  if (!dbUser) {
-    // ユーザーが存在しない場合は作成（Webhook より先にアクセスした場合など）
-    dbUser = await prisma.users.create({
-      data: {
-        clerk_user_id: authUser.clerkUserId,
-        email: authUser.email,
-        name: authUser.name,
-        avatar_url: authUser.avatarUrl,
-      },
-    });
-  }
 
   return {
     id: dbUser.id,
