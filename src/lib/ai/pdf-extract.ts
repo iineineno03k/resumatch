@@ -2,21 +2,55 @@
  * PDF テキスト抽出モジュール
  *
  * pdfjs-dist を Node.js/SSR 環境で使用するための設定:
+ * - 動的インポートを使用してSSR時のDOMMatrix参照エラーを回避
  * - globalThis.pdfjsWorker に WorkerMessageHandler を設定することで
  *   動的インポートの失敗を回避
  *
  * 参考: https://github.com/mozilla/pdf.js/issues/12066
  */
 
-// WorkerMessageHandler を globalThis に設定（動的インポートの前に必要）
-import * as pdfjsWorker from "pdfjs-dist/legacy/build/pdf.worker.mjs";
+// pdfjs-dist の型定義
+type PDFDocumentProxy = {
+  numPages: number;
+  getPage: (pageNumber: number) => Promise<PDFPageProxy>;
+};
 
-// @ts-expect-error - pdfjs-dist の内部設定
-globalThis.pdfjsWorker = pdfjsWorker;
+type PDFPageProxy = {
+  getTextContent: () => Promise<{ items: Array<{ str?: string }> }>;
+};
 
-// メインライブラリのインポート
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
-import type { TextItem } from "pdfjs-dist/types/src/display/api";
+type GetDocumentParams = {
+  data: Uint8Array;
+  useSystemFonts?: boolean;
+  disableFontFace?: boolean;
+  isEvalSupported?: boolean;
+};
+
+type PDFJSLib = {
+  getDocument: (params: GetDocumentParams) => { promise: Promise<PDFDocumentProxy> };
+};
+
+let pdfjsLibInstance: PDFJSLib | null = null;
+
+/**
+ * pdfjs-dist を動的にロードする（SSR時のエラーを回避）
+ */
+async function getPdfjsLib(): Promise<PDFJSLib> {
+  if (pdfjsLibInstance) {
+    return pdfjsLibInstance;
+  }
+
+  // WorkerMessageHandler を globalThis に設定（動的インポートの前に必要）
+  const pdfjsWorker = await import("pdfjs-dist/legacy/build/pdf.worker.mjs");
+  // @ts-expect-error - pdfjs-dist の内部設定
+  globalThis.pdfjsWorker = pdfjsWorker;
+
+  // メインライブラリのインポート
+  const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  pdfjsLibInstance = pdfjsLib as unknown as PDFJSLib;
+
+  return pdfjsLibInstance;
+}
 
 export type PdfExtractResult = {
   success: true;
@@ -76,6 +110,9 @@ JavaScript, TypeScript, React, Node.js, Python
     const data =
       pdfBuffer instanceof ArrayBuffer ? new Uint8Array(pdfBuffer) : pdfBuffer;
 
+    // pdfjs-dist を動的にロード
+    const pdfjsLib = await getPdfjsLib();
+
     const loadingTask = pdfjsLib.getDocument({
       data,
       useSystemFonts: true,
@@ -101,7 +138,7 @@ JavaScript, TypeScript, React, Node.js, Python
       const textContent = await page.getTextContent();
 
       const pageText = textContent.items
-        .filter((item): item is TextItem => "str" in item)
+        .filter((item): item is { str: string } => typeof item.str === "string")
         .map((item) => item.str)
         .join(" ");
 
