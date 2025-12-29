@@ -35,12 +35,74 @@ type PDFJSLib = {
 let pdfjsLibInstance: PDFJSLib | null = null;
 
 /**
+ * Node.js環境用のDOMMatrixポリフィル
+ * pdfjs-distが内部で使用するが、テキスト抽出には実際の変換は不要
+ */
+function ensureDOMMatrixPolyfill(): void {
+  if (typeof globalThis.DOMMatrix === "undefined") {
+    // @ts-expect-error - ポリフィル用の最小実装
+    globalThis.DOMMatrix = class DOMMatrix {
+      a = 1;
+      b = 0;
+      c = 0;
+      d = 1;
+      e = 0;
+      f = 0;
+      m11 = 1;
+      m12 = 0;
+      m13 = 0;
+      m14 = 0;
+      m21 = 0;
+      m22 = 1;
+      m23 = 0;
+      m24 = 0;
+      m31 = 0;
+      m32 = 0;
+      m33 = 1;
+      m34 = 0;
+      m41 = 0;
+      m42 = 0;
+      m43 = 0;
+      m44 = 1;
+      is2D = true;
+      isIdentity = true;
+
+      constructor(_init?: string | number[]) {
+        // 初期化は無視（テキスト抽出には不要）
+      }
+
+      multiply() {
+        return new DOMMatrix();
+      }
+      translate() {
+        return new DOMMatrix();
+      }
+      scale() {
+        return new DOMMatrix();
+      }
+      rotate() {
+        return new DOMMatrix();
+      }
+      inverse() {
+        return new DOMMatrix();
+      }
+      transformPoint(point: { x: number; y: number }) {
+        return point;
+      }
+    };
+  }
+}
+
+/**
  * pdfjs-dist を動的にロードする（SSR時のエラーを回避）
  */
 async function getPdfjsLib(): Promise<PDFJSLib> {
   if (pdfjsLibInstance) {
     return pdfjsLibInstance;
   }
+
+  // DOMMatrixポリフィルを設定
+  ensureDOMMatrixPolyfill();
 
   // WorkerMessageHandler を globalThis に設定（動的インポートの前に必要）
   const pdfjsWorker = await import("pdfjs-dist/legacy/build/pdf.worker.mjs");
