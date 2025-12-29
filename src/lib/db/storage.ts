@@ -122,7 +122,9 @@ async function uploadSupabase(
   file: Buffer | Uint8Array,
   fileName: string,
 ): Promise<{ success: true; url: string } | { success: false; error: string }> {
-  const filePath = `${companyId}/${applicantId}/${Date.now()}_${fileName}`;
+  // 日本語などの非ASCII文字をサニタイズ
+  const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const filePath = `${companyId}/${applicantId}/${Date.now()}_${safeFileName}`;
 
   const { error } = await getSupabaseAdmin()
     .storage.from("resumes")

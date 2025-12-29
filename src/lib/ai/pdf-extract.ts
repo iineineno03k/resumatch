@@ -27,7 +27,9 @@ type GetDocumentParams = {
 };
 
 type PDFJSLib = {
-  getDocument: (params: GetDocumentParams) => { promise: Promise<PDFDocumentProxy> };
+  getDocument: (params: GetDocumentParams) => {
+    promise: Promise<PDFDocumentProxy>;
+  };
 };
 
 let pdfjsLibInstance: PDFJSLib | null = null;
