@@ -40,58 +40,67 @@ async function checkCompanyMembership(companyId: string, userId: string) {
 export async function createApplicant(
   input: CreateApplicantInput,
 ): Promise<ActionResult<{ id: string; name: string }>> {
-  const user = await getCurrentUser();
-  if (!user) {
-    return { success: false, error: "認証が必要です" };
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "認証が必要です" };
+    }
+
+    const { companyId, jobId, name, email, phone } = input;
+
+    // メンバーシップチェック
+    const isMember = await checkCompanyMembership(companyId, user.id);
+    if (!isMember) {
+      return { success: false, error: "この会社へのアクセス権限がありません" };
+    }
+
+    // バリデーション
+    if (!name || name.trim().length === 0) {
+      return { success: false, error: "氏名は必須です" };
+    }
+
+    if (name.length > 255) {
+      return { success: false, error: "氏名は255文字以内で入力してください" };
+    }
+
+    // 求人存在チェック
+    const job = await prisma.jobs.findFirst({
+      where: { id: jobId, company_id: companyId },
+    });
+
+    if (!job) {
+      return { success: false, error: "求人が見つかりません" };
+    }
+
+    // 応募者作成
+    const applicant = await prisma.applicants.create({
+      data: {
+        company_id: companyId,
+        job_id: jobId,
+        name: name.trim(),
+        email: email || null,
+        phone: phone || null,
+        status: "screening",
+      },
+    });
+
+    revalidatePath(`/applicants`);
+
+    return {
+      success: true,
+      data: {
+        id: applicant.id,
+        name: applicant.name,
+      },
+    };
+  } catch (error) {
+    console.error("createApplicant error:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "応募者の登録に失敗しました",
+    };
   }
-
-  const { companyId, jobId, name, email, phone } = input;
-
-  // メンバーシップチェック
-  const isMember = await checkCompanyMembership(companyId, user.id);
-  if (!isMember) {
-    return { success: false, error: "この会社へのアクセス権限がありません" };
-  }
-
-  // バリデーション
-  if (!name || name.trim().length === 0) {
-    return { success: false, error: "氏名は必須です" };
-  }
-
-  if (name.length > 255) {
-    return { success: false, error: "氏名は255文字以内で入力してください" };
-  }
-
-  // 求人存在チェック
-  const job = await prisma.jobs.findFirst({
-    where: { id: jobId, company_id: companyId },
-  });
-
-  if (!job) {
-    return { success: false, error: "求人が見つかりません" };
-  }
-
-  // 応募者作成
-  const applicant = await prisma.applicants.create({
-    data: {
-      company_id: companyId,
-      job_id: jobId,
-      name: name.trim(),
-      email: email || null,
-      phone: phone || null,
-      status: "screening",
-    },
-  });
-
-  revalidatePath(`/applicants`);
-
-  return {
-    success: true,
-    data: {
-      id: applicant.id,
-      name: applicant.name,
-    },
-  };
 }
 
 /**
