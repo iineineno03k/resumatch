@@ -10,6 +10,7 @@
 
 // WorkerMessageHandler を globalThis に設定（動的インポートの前に必要）
 import * as pdfjsWorker from "pdfjs-dist/legacy/build/pdf.worker.mjs";
+
 // @ts-expect-error - pdfjs-dist の内部設定
 globalThis.pdfjsWorker = pdfjsWorker;
 

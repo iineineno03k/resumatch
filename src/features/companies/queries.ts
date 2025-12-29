@@ -7,39 +7,39 @@ import type { CompanyWithRole } from "./types";
  * 1ユーザー = 1会社の設計
  * cache() でリクエスト内の重複呼び出しを除去
  */
-export const getUserCompany = cache(async (
-  userId: string,
-): Promise<CompanyWithRole | null> => {
-  const user = await prisma.users.findUnique({
-    where: { id: userId },
-    include: {
-      companies: {
-        include: {
-          _count: {
-            select: {
-              users: true,
-              jobs: true,
+export const getUserCompany = cache(
+  async (userId: string): Promise<CompanyWithRole | null> => {
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      include: {
+        companies: {
+          include: {
+            _count: {
+              select: {
+                users: true,
+                jobs: true,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
 
-  if (!user?.companies) {
-    return null;
-  }
+    if (!user?.companies) {
+      return null;
+    }
 
-  return {
-    id: user.companies.id,
-    name: user.companies.name,
-    slug: user.companies.slug,
-    role: (user.role ?? "member") as CompanyWithRole["role"],
-    memberCount: user.companies._count.users,
-    jobCount: user.companies._count.jobs,
-    createdAt: user.companies.created_at,
-  };
-});
+    return {
+      id: user.companies.id,
+      name: user.companies.name,
+      slug: user.companies.slug,
+      role: (user.role ?? "member") as CompanyWithRole["role"],
+      memberCount: user.companies._count.users,
+      jobCount: user.companies._count.jobs,
+      createdAt: user.companies.created_at,
+    };
+  },
+);
 
 /**
  * 会社を取得（メンバーシップ確認付き）

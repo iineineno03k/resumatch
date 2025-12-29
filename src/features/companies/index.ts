@@ -3,7 +3,7 @@
 // Actions (Server Actions)
 export { createCompany } from "./actions";
 // Components
-export { OnboardingForm } from "./components";
+export { OnboardingForm, WaitingForInvite } from "./components";
 
 // Queries (Server Components から呼ぶ)
 export { getCompanyWithMembership, getUserCompany } from "./queries";

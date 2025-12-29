@@ -22,7 +22,20 @@ function mockMiddleware(_request: NextRequest) {
  */
 const clerkMw = clerkMiddleware();
 
+/**
+ * 新規登録が無効かどうか（招待専用モード）
+ * デフォルトは無効（招待専用）
+ */
+function isSignUpDisabled(): boolean {
+  return process.env.ALLOW_SIGN_UP !== "true";
+}
+
 export default function middleware(request: NextRequest) {
+  // 新規登録ページへのアクセスをブロック（招待専用モード）
+  if (isSignUpDisabled() && request.nextUrl.pathname.startsWith("/sign-up")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   // モックモードの場合は認証をスキップ
   if (isAuthMockEnabled()) {
     return mockMiddleware(request);

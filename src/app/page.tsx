@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 // モックモードかどうかを判定（サーバーサイド）
@@ -38,7 +38,7 @@ export default function Home() {
       <h1 className="text-4xl font-bold">ResuMatch</h1>
       <p className="mt-4 text-lg text-gray-600">採用管理SaaS + AI履歴書解析</p>
 
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex flex-col items-center gap-4">
         <SignedOut>
           <SignInButton mode="modal">
             <button
@@ -48,14 +48,9 @@ export default function Home() {
               ログイン
             </button>
           </SignInButton>
-          <SignUpButton mode="modal">
-            <button
-              type="button"
-              className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              新規登録
-            </button>
-          </SignUpButton>
+          <p className="mt-4 text-sm text-gray-500">
+            新規登録は招待リンクからのみ可能です
+          </p>
         </SignedOut>
 
         <SignedIn>
