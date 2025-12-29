@@ -10,6 +10,7 @@
     "build": "prisma generate && next build",
     "postinstall": "prisma generate",
     "start": "next start",
+    "preview": "next build && next start",
     "lint": "biome check",
     "check:fix": "biome check --write",
     "format": "biome format --write",

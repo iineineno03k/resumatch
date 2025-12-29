@@ -166,6 +166,34 @@ bun run check:fix
 bun run build
 ```
 
+### 本番ビルドのローカルテスト
+
+**重要な変更（特にSSR関連）をする際は、本番ビルドでテストすること。**
+
+```bash
+# 本番ビルドをローカルで起動
+bun run preview
+```
+
+これは `next build && next start` を実行し、Vercelと同じバンドル済みコードが `http://localhost:3000` で動作します。
+
+**なぜ必要か:**
+
+| 環境 | 動作 | 検出できる問題 |
+|-----|------|--------------|
+| `next dev` | Turbopackで遅延ロード | 開発中のエラーのみ |
+| `next build && start` | 本番バンドル + SSR実行 | SSRランタイムエラー |
+
+**例: pdfjs-dist の DOMMatrix エラー**
+- `bun run dev`: エラーなし（モジュールが遅延ロードされるため）
+- `bun run build`: 成功（バンドルのみ、実行しない）
+- `bun run start`: エラー発生（SSRでモジュールが実行される）
+
+**推奨フロー:**
+1. 開発中 → `bun run dev` で素早くイテレーション
+2. PR前 → `bun run preview` でSSR/本番動作を確認
+3. CI/CD → 自動でbuild && テスト
+
 ### Playwright による動作確認
 
 ページ実装後は Playwright MCP ツールで実際にブラウザ確認する:
