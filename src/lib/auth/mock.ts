@@ -8,8 +8,8 @@ export const MOCK_USERS = {
   /** デフォルトのモックユーザー */
   default: {
     clerkUserId: "user_mock_default",
-    email: "dev@example.com",
-    name: "開発ユーザー",
+    email: "sample@test.com",
+    name: "サンプルユーザー",
     avatarUrl: null,
   },
   /** オーナー権限のモックユーザー */
